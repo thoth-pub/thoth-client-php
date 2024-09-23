@@ -1,0 +1,17 @@
+{
+    "name": "lepidus/thoth-client-php",
+    "description": "PHP client for Thoth's GraphQL and REST APIs.",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
+    "license": "Apache 2.0",
+    "autoload": {
+        "psr-4": {
+            "ThothClient\\": "src/"
+        }
+    }
+}
