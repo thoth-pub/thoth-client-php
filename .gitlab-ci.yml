@@ -5,6 +5,7 @@ cache:
     - vendor/
 
 before_script:
+  - apt update && apt install git libpq-dev libzip-dev zip -yqq
   - curl -sS https://getcomposer.org/installer | php
   - php composer.phar install --ignore-platform-reqs --optimize-autoloader --no-ansi --no-interaction --no-progress
 
