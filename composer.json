@@ -3,7 +3,7 @@
     "description": "PHP client for Thoth's GraphQL and REST APIs.",
     "type": "library",
     "require": {
-        "php": "^7.4",
+        "php": ">=7.4",
         "guzzlehttp/guzzle": "^7.9"
     },
     "require-dev": {

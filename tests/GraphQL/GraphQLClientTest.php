@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\Tests;
+namespace ThothClient\Tests\GraphQL;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;

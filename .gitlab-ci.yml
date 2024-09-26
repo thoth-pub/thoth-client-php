@@ -1,0 +1,35 @@
+image: php:7.4
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install --ignore-platform-reqs --optimize-autoloader --no-ansi --no-interaction --no-progress
+
+.lint: &lint
+  - vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes
+
+.test: &test
+  - vendor/bin/phpunit tests/
+
+lint:php7.4:
+  image: php:7.4
+  script:
+    - *lint
+
+lint:php8.2:
+  image: php:8.2
+  script:
+    - *lint
+
+test:php7.4:
+  image: php:7.4
+  script:
+    - *test
+
+test:php8.2:
+  image: php:8.2
+  script:
+    - *test
