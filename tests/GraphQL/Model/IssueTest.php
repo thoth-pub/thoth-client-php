@@ -5,7 +5,7 @@ namespace ThothClient\Tests\GraphQL\Model;
 use PHPUnit\Framework\TestCase;
 use ThothClient\GraphQL\Model\Issue;
 
-class IssueTest extends TestCase
+final class IssueTest extends TestCase
 {
     public function testGettersAndSetters(): void
     {
