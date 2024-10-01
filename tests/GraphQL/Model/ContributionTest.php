@@ -18,6 +18,7 @@ final class ContributionTest extends TestCase
         $firstName = 'Cassady';
         $lastName = 'Browning';
         $fullName = 'Cassady Browning';
+        $contributionOrdinal = 1;
 
         $contribution = new Contribution();
         $contribution->setContributionId($contributionId);
@@ -29,6 +30,7 @@ final class ContributionTest extends TestCase
         $contribution->setFirstName($firstName);
         $contribution->setLastName($lastName);
         $contribution->setFullName($fullName);
+        $contribution->setContributionOrdinal($contributionOrdinal);
 
         $this->assertSame($contributionId, $contribution->getContributionId());
         $this->assertSame($contributorId, $contribution->getContributorId());
@@ -39,5 +41,6 @@ final class ContributionTest extends TestCase
         $this->assertSame($firstName, $contribution->getFirstName());
         $this->assertSame($lastName, $contribution->getLastName());
         $this->assertSame($fullName, $contribution->getFullName());
+        $this->assertSame($contributionOrdinal, $contribution->getContributionOrdinal());
     }
 }
