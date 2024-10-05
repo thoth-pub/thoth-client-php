@@ -5,7 +5,7 @@ namespace ThothClient\GraphQL;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
-class GraphQLClient
+class Request
 {
     private $endpoint;
 
@@ -17,7 +17,7 @@ class GraphQLClient
         $this->httpClient = new Client($httpConfig);
     }
 
-    public function runQuery(string $query, ?array $variables = null): Response
+    public function execute(string $query, ?array $variables = null): Response
     {
         $body = ['query' => $query];
 
