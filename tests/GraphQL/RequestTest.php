@@ -5,26 +5,26 @@ namespace ThothClient\Tests\GraphQL;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use ThothClient\Exception\QueryException;
-use ThothClient\GraphQL\GraphQLClient;
+use ThothClient\GraphQL\Request;
 
-final class GraphQLClientTest extends TestCase
+final class RequestTest extends TestCase
 {
-    private $mockHandler;
+    private MockHandler $mockHandler;
 
-    private $gqlClient;
+    private Request $request;
 
     protected function setUp(): void
     {
         $this->mockHandler = new MockHandler();
         $handler = HandlerStack::create($this->mockHandler);
-        $this->gqlClient = new GraphQLClient('', ['handler' => $handler]);
+        $this->request = new Request('', ['handler' => $handler]);
     }
 
-    public function testRunQuery(): void
+    public function testExecuteQuery(): void
     {
         $query = <<<QUERY
             query {
@@ -46,7 +46,7 @@ final class GraphQLClientTest extends TestCase
 
         $this->mockHandler->append(new Response(200, [], json_encode($body)));
 
-        $response = $this->gqlClient->runQuery($query);
+        $response = $this->request->execute($query);
         $this->assertEquals($body['data'], $response->getData());
     }
 
@@ -67,14 +67,14 @@ final class GraphQLClientTest extends TestCase
         ])));
 
         $this->expectException(QueryException::class);
-        $this->gqlClient->runQuery('');
+        $this->request->execute('');
     }
 
     public function testInvalidQueryResponseWith400(): void
     {
         $this->mockHandler->append(new ClientException(
             '',
-            new Request('post', ''),
+            new GuzzleRequest('post', ''),
             new Response(400, [], json_encode([
                 'errors' => [
                     [
@@ -91,6 +91,6 @@ final class GraphQLClientTest extends TestCase
         ));
 
         $this->expectException(QueryException::class);
-        $this->gqlClient->runQuery('');
+        $this->request->execute('');
     }
 }
