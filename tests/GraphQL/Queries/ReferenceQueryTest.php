@@ -7,7 +7,7 @@ use ThothClient\GraphQL\Queries\ReferenceQuery;
 
 final class ReferenceQueryTest extends TestCase
 {
-    private referenceQuery $referenceQuery;
+    private ReferenceQuery $referenceQuery;
 
     protected function setUp(): void
     {

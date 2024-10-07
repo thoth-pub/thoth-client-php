@@ -13,9 +13,9 @@ use ThothClient\GraphQL\Request;
 
 final class RequestTest extends TestCase
 {
-    private $mockHandler;
+    private MockHandler $mockHandler;
 
-    private $request;
+    private Request $request;
 
     protected function setUp(): void
     {
