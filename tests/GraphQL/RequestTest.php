@@ -46,7 +46,7 @@ final class RequestTest extends TestCase
 
         $this->mockHandler->append(new Response(200, [], json_encode($body)));
 
-        $response = $this->request->execute($query);
+        $response = $this->request->runQuery($query);
         $this->assertEquals($body['data'], $response->getData());
     }
 
@@ -67,7 +67,7 @@ final class RequestTest extends TestCase
         ])));
 
         $this->expectException(QueryException::class);
-        $this->request->execute('');
+        $this->request->runQuery('');
     }
 
     public function testInvalidQueryResponseWith400(): void
@@ -91,6 +91,6 @@ final class RequestTest extends TestCase
         ));
 
         $this->expectException(QueryException::class);
-        $this->request->execute('');
+        $this->request->runQuery('');
     }
 }
