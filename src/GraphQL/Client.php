@@ -2,23 +2,23 @@
 
 namespace ThothClient\GraphQL;
 
-use ThothClient\GraphQL\Model\AbstractModel;
-use ThothClient\GraphQL\Model\Affiliation;
-use ThothClient\GraphQL\Model\Contribution;
-use ThothClient\GraphQL\Model\Contributor;
-use ThothClient\GraphQL\Model\Funding;
-use ThothClient\GraphQL\Model\Imprint;
-use ThothClient\GraphQL\Model\Institution;
-use ThothClient\GraphQL\Model\Issue;
-use ThothClient\GraphQL\Model\Language;
-use ThothClient\GraphQL\Model\Location;
-use ThothClient\GraphQL\Model\Price;
-use ThothClient\GraphQL\Model\Publication;
-use ThothClient\GraphQL\Model\Publisher;
-use ThothClient\GraphQL\Model\Reference;
-use ThothClient\GraphQL\Model\Series;
-use ThothClient\GraphQL\Model\Subject;
-use ThothClient\GraphQL\Model\Work;
+use ThothClient\GraphQL\Models\AbstractModel;
+use ThothClient\GraphQL\Models\Affiliation;
+use ThothClient\GraphQL\Models\Contribution;
+use ThothClient\GraphQL\Models\Contributor;
+use ThothClient\GraphQL\Models\Funding;
+use ThothClient\GraphQL\Models\Imprint;
+use ThothClient\GraphQL\Models\Institution;
+use ThothClient\GraphQL\Models\Issue;
+use ThothClient\GraphQL\Models\Language;
+use ThothClient\GraphQL\Models\Location;
+use ThothClient\GraphQL\Models\Price;
+use ThothClient\GraphQL\Models\Publication;
+use ThothClient\GraphQL\Models\Publisher;
+use ThothClient\GraphQL\Models\Reference;
+use ThothClient\GraphQL\Models\Series;
+use ThothClient\GraphQL\Models\Subject;
+use ThothClient\GraphQL\Models\Work;
 
 class Client
 {
@@ -364,7 +364,7 @@ class Client
         if ($entityName == 'book' || $entityName == 'chapter') {
             $entityName = 'work';
         }
-        return '\\ThothClient\\GraphQL\\Model\\' . ucfirst($entityName);
+        return '\\ThothClient\\GraphQL\\Models\\' . ucfirst($entityName);
     }
 
     private function query(string $queryName, array $args = []): array
