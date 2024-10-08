@@ -7,17 +7,15 @@ use GuzzleHttp\Exception\ClientException;
 
 class Request
 {
-    private $endpoint;
-
     private $httpClient;
 
-    public function __construct(string $endpoint, $httpConfig = [])
+    public function __construct(string $baseUri, $httpConfig = [])
     {
-        $this->endpoint = $endpoint;
+        $httpConfig = array_merge($httpConfig, ['base_uri' => $baseUri]);
         $this->httpClient = new Client($httpConfig);
     }
 
-    public function execute(string $query, ?array $variables = null): Response
+    public function runQuery(string $query, ?array $variables = null): Response
     {
         $body = ['query' => $query];
 
@@ -32,8 +30,13 @@ class Request
             ],
         ];
 
+        return $this->execute('POST', 'graphql', $options);
+    }
+
+    public function execute(string $method, string $endpoint, array $options = []): Response
+    {
         try {
-            $httpResponse = $this->httpClient->request('POST', $this->endpoint, $options);
+            $httpResponse = $this->httpClient->request($method, $endpoint, $options);
         } catch (ClientException $exception) {
             $httpResponse = $exception->getResponse();
         }

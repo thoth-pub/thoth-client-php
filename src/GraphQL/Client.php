@@ -24,11 +24,24 @@ class Client
 {
     private Request $request;
 
-    public const THOTH_ENDPOINT = 'https://api.thoth.pub/graphql';
+    private string $token;
+
+    public const THOTH_BASE_URI = 'https://api.thoth.pub/';
 
     public function __construct(?Request $request = null)
     {
-        $this->request = $request ?? new Request(self::THOTH_ENDPOINT);
+        $this->request = $request ?? new Request(self::THOTH_BASE_URI);
+    }
+
+    public function login(string $email, string $password): self
+    {
+        $this->token = (new Account($this->request))->login($email, $password);
+        return $this;
+    }
+
+    public function accountDetails(): array
+    {
+        return (new Account($this->request))->details($this->token);
     }
 
     public function affiliation(string $affiliationId): Affiliation
@@ -357,7 +370,7 @@ class Client
     private function query(string $queryName, array $args = []): array
     {
         $query = QueryProvider::get($queryName);
-        $response = $this->request->execute($query, $args);
+        $response = $this->request->runQuery($query, $args);
         return $response->getData();
     }
 }
