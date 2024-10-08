@@ -2,6 +2,7 @@
 
 namespace ThothClient\GraphQL;
 
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Psr\Http\Message\ResponseInterface;
 use ThothClient\Exception\QueryException;
 
@@ -9,9 +10,12 @@ class Response
 {
     private string $body;
 
-    public function __construct(ResponseInterface $httpResponse)
+    private GuzzleResponse $previousResponse;
+
+    public function __construct(ResponseInterface $guzzleResponse)
     {
-        $this->body = $httpResponse->getBody()->getContents();
+        $this->previousResponse = $guzzleResponse;
+        $this->body = $guzzleResponse->getBody()->getContents();
 
         if ($error = $this->getErrors()) {
             throw new QueryException($error);
@@ -21,7 +25,16 @@ class Response
     public function getErrors(): ?array
     {
         $decodedBody = json_decode($this->body, true);
-        return array_key_exists('errors', $decodedBody) ? array_shift($decodedBody['errors']) : null;
+
+        if (isset($decodedBody['errors'])) {
+            return array_shift($decodedBody['errors']);
+        }
+
+        if (!isset($decodedBody['data']) && $this->previousResponse->getStatusCode() != 200) {
+            return ['message' => $this->body];
+        }
+
+        return null;
     }
 
     public function getBody(): string
