@@ -39,6 +39,23 @@ final class ClientTest extends TestCase
         $this->client = new Client($request);
     }
 
+    public function testGetAccountDetails(): void
+    {
+        $expectedDetails = [
+            'accountId' => 'c00ac1b7-5fda-468d-8634-707cd069f560'
+        ];
+        $this->mockHandler->append(new Response(200, [], json_encode([
+            'token' => 'someLongToken'
+        ])));
+        $this->mockHandler->append(new Response(200, [], json_encode($expectedDetails)));
+
+        $email = 'user@mailinator.com';
+        $password = 'secret';
+
+        $accountDetails = $this->client->login($email, $password)->accountDetails();
+        $this->assertSame($expectedDetails, $accountDetails);
+    }
+
     public function testAffiliation(): void
     {
         $affiliation = new Affiliation(['affiliationId' => '9afc6760-f556-46a1-a912-39ea5ebc921b']);
