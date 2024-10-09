@@ -7,6 +7,14 @@ use ThothClient\GraphQL\MutationBuilder;
 
 final class MutationBuilderTest extends TestCase
 {
+    public function testInvalidMutation(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Mutation \'foo\' not found.');
+
+        $mutation = MutationBuilder::build('foo', []);
+    }
+
     public function testBuildCreateAffiliationMutation(): void
     {
         $mutationName = 'createAffiliation';
