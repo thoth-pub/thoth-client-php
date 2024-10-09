@@ -359,6 +359,13 @@ class Client
         return new $entityClass($result[$queryName]);
     }
 
+    private function mutation(string $mutationName, array $data): array
+    {
+        $mutation = MutationBuilder::build($mutationName, $data);
+        $response = $this->request->runQuery($mutation);
+        return $response->getData();
+    }
+
     private function getModelClass(string $entityName): string
     {
         if ($entityName == 'book' || $entityName == 'chapter') {
