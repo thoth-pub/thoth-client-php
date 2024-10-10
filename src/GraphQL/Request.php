@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\GraphQL;
+namespace ThothApi\GraphQL;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -9,9 +9,8 @@ class Request
 {
     private $httpClient;
 
-    public function __construct(string $baseUri, $httpConfig = [])
+    public function __construct(array $httpConfig)
     {
-        $httpConfig = array_merge($httpConfig, ['base_uri' => $baseUri]);
         $this->httpClient = new Client($httpConfig);
     }
 

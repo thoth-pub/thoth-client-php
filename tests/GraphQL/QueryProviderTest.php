@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL;
+namespace ThothApi\Tests\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\QueryProvider;
+use ThothApi\GraphQL\QueryProvider;
 
 final class QueryProviderTest extends TestCase
 {

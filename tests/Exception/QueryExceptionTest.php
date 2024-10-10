@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\Exception;
+namespace ThothApi\Tests\Exception;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\Exception\QueryException;
+use ThothApi\Exception\QueryException;
 
 class QueryExceptionTest extends TestCase
 {

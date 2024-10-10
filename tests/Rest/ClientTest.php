@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\Tests\Rest;
+namespace ThothApi\Tests\Rest;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
@@ -8,8 +8,8 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use ThothClient\Exception\RestException;
-use ThothClient\Rest\Client;
+use ThothApi\Exception\RestException;
+use ThothApi\Rest\Client;
 
 final class ClientTest extends TestCase
 {

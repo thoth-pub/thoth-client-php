@@ -1,11 +1,11 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL;
+namespace ThothApi\Tests\GraphQL;
 
 use GuzzleHttp\Psr7\Response as HttpResponse;
 use PHPUnit\Framework\TestCase;
-use ThothClient\Exception\QueryException;
-use ThothClient\GraphQL\Response;
+use ThothApi\Exception\QueryException;
+use ThothApi\GraphQL\Response;
 
 class ResponseTest extends TestCase
 {

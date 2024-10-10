@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\GraphQL\Models;
+namespace ThothApi\GraphQL\Models;
 
 abstract class AbstractModel
 {

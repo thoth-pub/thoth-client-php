@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Models;
+namespace ThothApi\Tests\GraphQL\Models;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Models\Price;
+use ThothApi\GraphQL\Models\Price;
 
 final class PriceTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Quubject;
+namespace ThothApi\Tests\GraphQL\Quubject;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\SubjectQuery;
+use ThothApi\GraphQL\Queries\SubjectQuery;
 
 final class SubjectQueryTest extends TestCase
 {

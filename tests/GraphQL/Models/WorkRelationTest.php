@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Models;
+namespace ThothApi\Tests\GraphQL\Models;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Models\WorkRelation;
+use ThothApi\GraphQL\Models\WorkRelation;
 
 final class WorkRelationTest extends TestCase
 {

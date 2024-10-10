@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Queries;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\ContributionQuery;
+use ThothApi\GraphQL\Queries\ContributionQuery;
 
 final class ContributionQueryTest extends TestCase
 {

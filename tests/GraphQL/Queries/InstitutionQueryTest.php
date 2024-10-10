@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Queries;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\InstitutionQuery;
+use ThothApi\GraphQL\Queries\InstitutionQuery;
 
 final class InstitutionQueryTest extends TestCase
 {

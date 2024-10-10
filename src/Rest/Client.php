@@ -1,10 +1,10 @@
 <?php
 
-namespace ThothClient\Rest;
+namespace ThothApi\Rest;
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException;
-use ThothClient\Exception\RestException;
+use ThothApi\Exception\RestException;
 
 class Client
 {

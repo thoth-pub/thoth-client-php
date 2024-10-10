@@ -1,25 +1,25 @@
 <?php
 
-namespace ThothClient\GraphQL;
+namespace ThothApi\GraphQL;
 
-use ThothClient\GraphQL\Models\AbstractModel;
-use ThothClient\GraphQL\Models\Affiliation;
-use ThothClient\GraphQL\Models\Contribution;
-use ThothClient\GraphQL\Models\Contributor;
-use ThothClient\GraphQL\Models\Funding;
-use ThothClient\GraphQL\Models\Imprint;
-use ThothClient\GraphQL\Models\Institution;
-use ThothClient\GraphQL\Models\Issue;
-use ThothClient\GraphQL\Models\Language;
-use ThothClient\GraphQL\Models\Location;
-use ThothClient\GraphQL\Models\Price;
-use ThothClient\GraphQL\Models\Publication;
-use ThothClient\GraphQL\Models\Publisher;
-use ThothClient\GraphQL\Models\Reference;
-use ThothClient\GraphQL\Models\Series;
-use ThothClient\GraphQL\Models\Subject;
-use ThothClient\GraphQL\Models\Work;
-use ThothClient\GraphQL\Models\WorkRelation;
+use ThothApi\GraphQL\Models\AbstractModel;
+use ThothApi\GraphQL\Models\Affiliation;
+use ThothApi\GraphQL\Models\Contribution;
+use ThothApi\GraphQL\Models\Contributor;
+use ThothApi\GraphQL\Models\Funding;
+use ThothApi\GraphQL\Models\Imprint;
+use ThothApi\GraphQL\Models\Institution;
+use ThothApi\GraphQL\Models\Issue;
+use ThothApi\GraphQL\Models\Language;
+use ThothApi\GraphQL\Models\Location;
+use ThothApi\GraphQL\Models\Price;
+use ThothApi\GraphQL\Models\Publication;
+use ThothApi\GraphQL\Models\Publisher;
+use ThothApi\GraphQL\Models\Reference;
+use ThothApi\GraphQL\Models\Series;
+use ThothApi\GraphQL\Models\Subject;
+use ThothApi\GraphQL\Models\Work;
+use ThothApi\GraphQL\Models\WorkRelation;
 
 class Client
 {
@@ -29,9 +29,12 @@ class Client
 
     public const THOTH_BASE_URI = 'https://api.thoth.pub/';
 
-    public function __construct(?Request $request = null)
+    public function __construct(array $httpConfig = [])
     {
-        $this->request = $request ?? new Request(self::THOTH_BASE_URI);
+        if (!isset($httpConfig['base_uri'])) {
+            $httpConfig['base_uri'] = self::THOTH_BASE_URI;
+        }
+        $this->request = new Request($httpConfig);
     }
 
     public function login(string $email, string $password): self
@@ -628,7 +631,7 @@ class Client
         if ($entityName == 'book' || $entityName == 'chapter') {
             $entityName = 'work';
         }
-        return '\\ThothClient\\GraphQL\\Models\\' . ucfirst($entityName);
+        return '\\ThothApi\\GraphQL\\Models\\' . ucfirst($entityName);
     }
 
     private function query(string $queryName, array $args = []): array

@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Queries;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\LocationQuery;
+use ThothApi\GraphQL\Queries\LocationQuery;
 
 final class LocationQueryTest extends TestCase
 {
