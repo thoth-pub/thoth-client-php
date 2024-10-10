@@ -25,7 +25,7 @@ class Client
 {
     private Request $request;
 
-    private string $token;
+    private string $token = '';
 
     public const THOTH_BASE_URI = 'https://api.thoth.pub/';
 
@@ -621,7 +621,7 @@ class Client
     private function mutation(string $mutationName, AbstractModel $mutationObject, string $returnValue): string
     {
         $mutation = MutationBuilder::build($mutationName, $mutationObject->getAllData());
-        $response = $this->request->runQuery($mutation);
+        $response = $this->request->runQuery($mutation, null, $this->token);
         $data = $response->getData();
         return $data[$mutationName][$returnValue];
     }

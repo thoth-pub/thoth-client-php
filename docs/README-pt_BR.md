@@ -93,18 +93,21 @@ Uma exceção do tipo *QueryException* é lançada em caso de erro na solicitaç
 
 ```php
 try {
-    $work = new \ThothApi\GraphQL\Models\Work();
+    $work = new \ThothApi\GraphQL\Models\Work([
+        'fullTitle' => 'Foo Bar',
+        'title' => 'Foo',
+    ]);
     $workId = $client->createWork($work);
 } catch (\ThothApi\Exception\QueryException $exception) {
     echo $exception->getMessage();
     /**
      * Invalid value for argument "data", reason:
-     * "NewWork" is missing fields: "title", "imprintId", "fullTitle", "workStatus", "workType"
+     * "NewWork" is missing fields: "imprintId", "workStatus", "workType"
     */
     echo print_r($exception->getDetails());
     /**
      *  Array (
-     *      [message] => Invalid value for argument "data", reason: "NewWork" is missing fields: "title", "imprintId", "fullTitle", "workStatus", "workType"
+     *      [message] => Invalid value for argument "data", reason: "NewWork" is missing fields: "imprintId", "workStatus", "workType"
      *      [locations] => Array (
      *          [0] => Array (
      *              [line] => 3

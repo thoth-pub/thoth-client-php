@@ -14,7 +14,7 @@ class Request
         $this->httpClient = new Client($httpConfig);
     }
 
-    public function runQuery(string $query, ?array $variables = null): Response
+    public function runQuery(string $query, ?array $variables = null, ?string $token = null): Response
     {
         $body = ['query' => $query];
 
@@ -28,6 +28,10 @@ class Request
                 'Content-Type' => 'application/json',
             ],
         ];
+
+        if ($token) {
+            $options['headers']['Authorization'] = 'Bearer ' . $token;
+        }
 
         return $this->execute('POST', 'graphql', $options);
     }
