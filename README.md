@@ -4,7 +4,7 @@
 
 PHP client for the Thoth GraphQL and REST APIs.
 
-## Uso
+## Usage
 
 ### GraphQL
 
