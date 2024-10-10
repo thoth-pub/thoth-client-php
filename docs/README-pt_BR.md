@@ -156,12 +156,11 @@ echo(print_r($client->work('doideposit::crossref', 'e0f748b2-984f-45cc-8b9e-1398
  *          <titles>
  *              <title>A Bibliography for After Jews and Arabs</title>
  *          </titles>
+ *          ...
  */
 ```
 
 #### Exceções
-
-Uma exceção do tipo RestException é lançada em caso de erro na solicitação.
 
 ```php
 try {
@@ -198,13 +197,13 @@ $client = new Client(['base_uri' => 'localhost:8000']);
 
 ## Créditos
 
-Idealizado e patrocinado pelo [Thoth](https://thoth.pub/).
+Idealizado e patrocinado por [Thoth](https://thoth.pub/).
 
 Desenvolvido por [Lepidus Tecnologia](https://github.com/lepidus).
 
 ## Licença
 
-Este plugin está licenciado sob a Licença Apache, Versão 2.0 - [Veja o arquivo de licença.](/LICENSE)
+Licenciado sob a Licença Apache, Versão 2.0 - [Veja o arquivo de licença.](/LICENSE)
 
 Copyright (c) 2024 Lepidus Tecnologia
 
