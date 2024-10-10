@@ -1,30 +1,29 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL;
+namespace ThothApi\Tests\GraphQL;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Client;
-use ThothClient\GraphQL\Models\Affiliation;
-use ThothClient\GraphQL\Models\Contribution;
-use ThothClient\GraphQL\Models\Contributor;
-use ThothClient\GraphQL\Models\Funding;
-use ThothClient\GraphQL\Models\Imprint;
-use ThothClient\GraphQL\Models\Institution;
-use ThothClient\GraphQL\Models\Issue;
-use ThothClient\GraphQL\Models\Language;
-use ThothClient\GraphQL\Models\Location;
-use ThothClient\GraphQL\Models\Price;
-use ThothClient\GraphQL\Models\Publication;
-use ThothClient\GraphQL\Models\Publisher;
-use ThothClient\GraphQL\Models\Reference;
-use ThothClient\GraphQL\Models\Series;
-use ThothClient\GraphQL\Models\Subject;
-use ThothClient\GraphQL\Models\Work;
-use ThothClient\GraphQL\Models\WorkRelation;
-use ThothClient\GraphQL\Request;
+use ThothApi\GraphQL\Client;
+use ThothApi\GraphQL\Models\Affiliation;
+use ThothApi\GraphQL\Models\Contribution;
+use ThothApi\GraphQL\Models\Contributor;
+use ThothApi\GraphQL\Models\Funding;
+use ThothApi\GraphQL\Models\Imprint;
+use ThothApi\GraphQL\Models\Institution;
+use ThothApi\GraphQL\Models\Issue;
+use ThothApi\GraphQL\Models\Language;
+use ThothApi\GraphQL\Models\Location;
+use ThothApi\GraphQL\Models\Price;
+use ThothApi\GraphQL\Models\Publication;
+use ThothApi\GraphQL\Models\Publisher;
+use ThothApi\GraphQL\Models\Reference;
+use ThothApi\GraphQL\Models\Series;
+use ThothApi\GraphQL\Models\Subject;
+use ThothApi\GraphQL\Models\Work;
+use ThothApi\GraphQL\Models\WorkRelation;
 
 final class ClientTest extends TestCase
 {
@@ -36,8 +35,7 @@ final class ClientTest extends TestCase
     {
         $this->mockHandler = new MockHandler();
         $handler = HandlerStack::create($this->mockHandler);
-        $request = new Request('', ['handler' => $handler]);
-        $this->client = new Client($request);
+        $this->client = new Client(['handler' => $handler]);
     }
 
     public function testGetAccountDetails(): void

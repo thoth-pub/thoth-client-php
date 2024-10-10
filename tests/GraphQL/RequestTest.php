@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL;
+namespace ThothApi\Tests\GraphQL;
 
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
@@ -8,8 +8,8 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use ThothClient\Exception\QueryException;
-use ThothClient\GraphQL\Request;
+use ThothApi\Exception\QueryException;
+use ThothApi\GraphQL\Request;
 
 final class RequestTest extends TestCase
 {
@@ -21,7 +21,7 @@ final class RequestTest extends TestCase
     {
         $this->mockHandler = new MockHandler();
         $handler = HandlerStack::create($this->mockHandler);
-        $this->request = new Request('', ['handler' => $handler]);
+        $this->request = new Request(['handler' => $handler]);
     }
 
     public function testExecuteQuery(): void
