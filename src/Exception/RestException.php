@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\Exception;
+namespace ThothApi\Exception;
 
 class RestException extends \RuntimeException
 {

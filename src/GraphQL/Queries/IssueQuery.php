@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\GraphQL\Queries;
+namespace ThothApi\GraphQL\Queries;
 
 class IssueQuery extends AbstractQuery
 {

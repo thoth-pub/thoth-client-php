@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothClient\GraphQL;
+namespace ThothApi\GraphQL;
 
 class Account
 {

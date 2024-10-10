@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL;
+namespace ThothApi\Tests\GraphQL;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\MutationBuilder;
+use ThothApi\GraphQL\MutationBuilder;
 
 final class MutationBuilderTest extends TestCase
 {

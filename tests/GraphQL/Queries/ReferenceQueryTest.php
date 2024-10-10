@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Queries;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\ReferenceQuery;
+use ThothApi\GraphQL\Queries\ReferenceQuery;
 
 final class ReferenceQueryTest extends TestCase
 {

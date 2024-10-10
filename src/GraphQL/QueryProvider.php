@@ -1,24 +1,24 @@
 <?php
 
-namespace ThothClient\GraphQL;
+namespace ThothApi\GraphQL;
 
-use ThothClient\GraphQL\Queries\AbstractQuery;
-use ThothClient\GraphQL\Queries\AffiliationQuery;
-use ThothClient\GraphQL\Queries\ContributionQuery;
-use ThothClient\GraphQL\Queries\ContributorQuery;
-use ThothClient\GraphQL\Queries\FundingQuery;
-use ThothClient\GraphQL\Queries\ImprintQuery;
-use ThothClient\GraphQL\Queries\InstitutionQuery;
-use ThothClient\GraphQL\Queries\IssueQuery;
-use ThothClient\GraphQL\Queries\LanguageQuery;
-use ThothClient\GraphQL\Queries\LocationQuery;
-use ThothClient\GraphQL\Queries\PriceQuery;
-use ThothClient\GraphQL\Queries\PublicationQuery;
-use ThothClient\GraphQL\Queries\PublisherQuery;
-use ThothClient\GraphQL\Queries\ReferenceQuery;
-use ThothClient\GraphQL\Queries\SeriesQuery;
-use ThothClient\GraphQL\Queries\SubjectQuery;
-use ThothClient\GraphQL\Queries\WorkQuery;
+use ThothApi\GraphQL\Queries\AbstractQuery;
+use ThothApi\GraphQL\Queries\AffiliationQuery;
+use ThothApi\GraphQL\Queries\ContributionQuery;
+use ThothApi\GraphQL\Queries\ContributorQuery;
+use ThothApi\GraphQL\Queries\FundingQuery;
+use ThothApi\GraphQL\Queries\ImprintQuery;
+use ThothApi\GraphQL\Queries\InstitutionQuery;
+use ThothApi\GraphQL\Queries\IssueQuery;
+use ThothApi\GraphQL\Queries\LanguageQuery;
+use ThothApi\GraphQL\Queries\LocationQuery;
+use ThothApi\GraphQL\Queries\PriceQuery;
+use ThothApi\GraphQL\Queries\PublicationQuery;
+use ThothApi\GraphQL\Queries\PublisherQuery;
+use ThothApi\GraphQL\Queries\ReferenceQuery;
+use ThothApi\GraphQL\Queries\SeriesQuery;
+use ThothApi\GraphQL\Queries\SubjectQuery;
+use ThothApi\GraphQL\Queries\WorkQuery;
 
 class QueryProvider
 {

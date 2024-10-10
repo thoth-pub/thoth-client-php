@@ -1,10 +1,10 @@
 <?php
 
-namespace ThothClient\GraphQL;
+namespace ThothApi\GraphQL;
 
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Psr\Http\Message\ResponseInterface;
-use ThothClient\Exception\QueryException;
+use ThothApi\Exception\QueryException;
 
 class Response
 {

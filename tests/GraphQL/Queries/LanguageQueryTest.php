@@ -1,9 +1,9 @@
 <?php
 
-namespace ThothClient\Tests\GraphQL\Queries;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
-use ThothClient\GraphQL\Queries\LanguageQuery;
+use ThothApi\GraphQL\Queries\LanguageQuery;
 
 final class LanguageQueryTest extends TestCase
 {
