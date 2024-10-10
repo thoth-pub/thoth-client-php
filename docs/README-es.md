@@ -1,8 +1,8 @@
-**English** | [Español](/docs/README-es.md) | [Português Brasileiro](/docs/README-pt_BR.md)
+[English](/README.md) | **Español** | [Português Brasileiro](/docs/README-pt_BR.md)
 
-# Thoth Client PHP
+# Thoth Cliente PHP
 
-PHP client for the Thoth GraphQL and REST APIs.
+Cliente PHP para las API GraphQL y REST de Thoth.
 
 ## Uso
 
@@ -12,9 +12,9 @@ PHP client for the Thoth GraphQL and REST APIs.
 $client = new \ThothApi\GraphQL\Client();
 ```
 
-#### Queries
+#### Consultas
 
-The client maps all queries from the Thoth GraphQL API. Methods return data in an object-oriented format, making it easy to use and manipulate information.
+El cliente mapea todas las consultas de la API GraphQL de Thoth. Los métodos retornan datos en formato orientado a objetos, facilitando el uso y manipulación de la información.
 
 ```php
 $contributors = $client->contributors();
@@ -52,7 +52,7 @@ echo $contributor->getLastName(); // Ansell
 echo $contributor->getOrcid(); // https://orcid.org/0000-0001-6365-5168
 ```
 
-Queries can accept an array with the required arguments as specified in the Thoth GraphQL schema. It's possible to use the "order" argument specifying only the field and the desired direction.
+Las consultas pueden aceptar un array con los argumentos necesarios, según lo especificado en el esquema GraphQL de Thoth. Es posible utilizar el argumento "order" especificando solo el campo y la dirección deseada.
 
 ```php
 $works = $client->works([
@@ -63,15 +63,15 @@ $works = $client->works([
 ]);
 ```
 
-#### Mutations
+#### Mutaciones
 
-To execute mutations, authentication with a Thoth account's credentials is required.
+Para ejecutar mutaciones es necesario autenticarse con las credenciales de una cuenta de Thoth.
 
 ```php
 $client->login($email, $password);
 ```
 
-Mutations can be executed by providing an instance of the model class corresponding to the mutation type. For deletion mutations, only the object's ID is required. When the operation is successful, the object's ID is returned.
+Las mutaciones pueden ejecutarse proporcionando una instancia de la clase modelo correspondiente al tipo de mutación. Para las mutaciones de eliminación, solo es necesario proporcionar la ID del objeto. Cuando la operación se realiza con éxito, se devuelve la ID del objeto.
 
 ```php
 use ThothApi\GraphQL\Models\Subject;
@@ -87,9 +87,9 @@ $subjectId = $client->createSubject($subject); // 1d5ae47b-9e0c-4fba-b2d4-a3a2cd
 $client->deleteSubject($subjectId);
 ```
 
-#### Exceptions
+#### Excepciones
 
-A QueryException is thrown in case of an error in the request to the GraphQL API. It's possible to retrieve the error message and a more detailed description from the exception.
+Se lanza una excepción del tipo *QueryException* en caso de error en la solicitud a la API GraphQL. Es posible recuperar el mensaje del error y una descripción más detallada a partir de la excepción.
 
 ```php
 try {
@@ -160,7 +160,7 @@ echo(print_r($client->work('doideposit::crossref', 'e0f748b2-984f-45cc-8b9e-1398
  */
 ```
 
-#### Exceptions
+#### Excepciones
 
 ```php
 try {
@@ -170,9 +170,9 @@ try {
 }
 ```
 
-### Client Construction
+### Construcción del Cliente
 
-The constructor of both Clients can receive an optional array to add custom [Guzzle HTTP Client request options](https://docs.guzzlephp.org/en/latest/request-options.html).
+El constructor de ambos Clientes puede recibir un array opcional para agregar configuraciones personalizadas de [solicitudes del Cliente HTTP Guzzle](https://docs.guzzlephp.org/en/latest/request-options.html).
 
 ```php
 $client = new Client([
@@ -189,21 +189,21 @@ $client = new Client([
 ]);
 ```
 
-Clients make requests to the default addresses of the Thoth APIs: https://api.thoth.pub/ for the GraphQL API and https://export.thoth.pub/ for the REST API. If you want to use a different address (such as "localhost" for testing), just add the "base_uri" option with the new address in the client's constructor.
+Los clientes realizan solicitudes a las direcciones predeterminadas de las APIs de Thoth: https://api.thoth.pub/ para la API GraphQL y https://export.thoth.pub/ para la API REST. Si deseas utilizar una dirección diferente (como "localhost" para pruebas), simplemente agrega la opción "base_uri" con la nueva dirección en el constructor del cliente.
 
 ```php
 $client = new Client(['base_uri' => 'localhost:8000']);
 ```
 
-## Credits
+## Créditos
 
-Idealized and sponsored by  [Thoth](https://thoth.pub/).
+Idealizado y patrocinado por [Thoth](https://thoth.pub/).
 
-Developed by [Lepidus Tecnologia](https://github.com/lepidus).
+Desarrollado por [Lepidus Tecnologia](https://github.com/lepidus).
 
-## License
+## Licencia
 
-Licensed under the Apache License, Version 2.0 - [See the License file.](/LICENSE)
+Licenciado bajo la Licencia Apache, Versión 2.0 - [Consulta el archivo de licencia.](/LICENSE)
 
 Copyright (c) 2024 Lepidus Tecnologia
 
