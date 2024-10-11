@@ -71,7 +71,7 @@ To execute mutations, authentication with a Thoth account's credentials is requi
 $client->login($email, $password);
 ```
 
-Mutations can be executed by providing an instance of the model class corresponding to the mutation type. For deletion mutations, only the object's ID is required. When the operation is successful, the object's ID is returned.
+Mutations can be executed by providing an instance of the model class corresponding to the mutation type. To delete mutations, only the object's ID is required. When the operation is successful, the object's ID is returned.
 
 ```php
 use ThothApi\GraphQL\Models\Subject;
