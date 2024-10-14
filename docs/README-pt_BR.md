@@ -8,6 +8,8 @@ Cliente PHP para as APIs GraphQL e REST do Thoth.
 
 ### GraphQL
 
+Documentação da API: https://api.thoth.pub/graphiql
+
 ```php
 $client = new \ThothApi\GraphQL\Client();
 ```
@@ -120,6 +122,8 @@ try {
 ```
 
 ### REST
+
+Documentação da API: https://export.thoth.pub/
 
 ```php
 $client = new \ThothApi\Rest\Client();
