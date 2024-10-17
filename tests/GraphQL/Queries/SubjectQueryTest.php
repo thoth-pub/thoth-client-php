@@ -1,6 +1,6 @@
 <?php
 
-namespace ThothApi\Tests\GraphQL\Quubject;
+namespace ThothApi\Tests\GraphQL\Queries;
 
 use PHPUnit\Framework\TestCase;
 use ThothApi\GraphQL\Queries\SubjectQuery;
