@@ -1,5 +1,5 @@
 {
-    "name": "lepidus/thoth-client-php",
+    "name": "thoth-pub/thoth-client-php",
     "description": "PHP client for Thoth's GraphQL and REST APIs.",
     "type": "library",
     "require": {
