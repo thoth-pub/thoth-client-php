@@ -10,7 +10,7 @@ before_script:
   - php composer.phar install --ignore-platform-reqs --optimize-autoloader --no-ansi --no-interaction --no-progress
 
 .lint: &lint
-  - vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes
+  - vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes --config=.php-cs-fixer.php
 
 .test: &test
   - vendor/bin/phpunit tests/
