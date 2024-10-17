@@ -39,7 +39,7 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Run lint code
-      run: vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes
+      run: vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes --config=.php-cs-fixer.php
 
     - name: Run test suite
       run: vendor/bin/phpunit tests/
