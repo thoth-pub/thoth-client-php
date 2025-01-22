@@ -4,6 +4,14 @@
 
 PHP client for the Thoth GraphQL and REST APIs.
 
+## Install
+
+This library is installable via Composer:
+
+```bash
+composer require thoth-pub/thoth-client-php
+```
+
 ## Usage
 
 ### GraphQL
