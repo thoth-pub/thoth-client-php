@@ -578,6 +578,12 @@ class Client
         return $this->mutation('deleteWorkRelation', $workRelation, 'workRelationId');
     }
 
+    public function rawQuery(string $rawQuery, array $args = []): array
+    {
+        $response = $this->request->runQuery($rawQuery, $args);
+        return $response->getData();
+    }
+
     private function get(string $entityName, string $entityId): AbstractModel
     {
         $entityClass = $this->getModelClass($entityName);
