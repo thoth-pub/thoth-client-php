@@ -111,11 +111,11 @@ class Contribution extends AbstractModel
 
     public function getContributionOrdinal(): ?int
     {
-        return $this->getData('ContributionOrdinal');
+        return $this->getData('contributionOrdinal');
     }
 
     public function setContributionOrdinal(?int $ContributionOrdinal): void
     {
-        $this->setData('ContributionOrdinal', $ContributionOrdinal);
+        $this->setData('contributionOrdinal', $ContributionOrdinal);
     }
 }
