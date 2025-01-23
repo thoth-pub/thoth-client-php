@@ -4,13 +4,14 @@ namespace ThothApi\GraphQL;
 
 class MutationBuilder
 {
-    public static function build(string $mutationName, array $mutationData, bool $nested = true): string
+    public static function build(string $mutationName, array $mutationData): string
     {
         $mutationFields = self::getMutationFields($mutationName);
         if ($mutationFields === null) {
             throw new \InvalidArgumentException("Mutation '{$mutationName}' not found.");
         }
 
+        $nested = !str_contains($mutationName, 'delete');
         $fields = $mutationFields['fields'];
         $returnValue = $mutationFields['returnValue'];
         $data = self::prepareData($fields, $mutationData);

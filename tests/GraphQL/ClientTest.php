@@ -1095,8 +1095,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $affiliation = new Affiliation();
-        $result = $this->client->deleteAffiliation($affiliation);
+        $result = $this->client->deleteAffiliation('e435b256-681c-4118-a3b5-bba22cb6fe7f');
         $this->assertSame('e435b256-681c-4118-a3b5-bba22cb6fe7f', $result);
     }
 
@@ -1140,8 +1139,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $contribution = new Contribution();
-        $result = $this->client->deleteContribution($contribution);
+        $result = $this->client->deleteContribution('5448ca99-ae7d-4347-9170-b8ffa067ebbf');
         $this->assertSame('5448ca99-ae7d-4347-9170-b8ffa067ebbf', $result);
     }
 
@@ -1185,8 +1183,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $contributor = new Contributor();
-        $result = $this->client->deleteContributor($contributor);
+        $result = $this->client->deleteContributor('2724eca4-0d31-44ba-bbf4-19061a9637ce');
         $this->assertSame('2724eca4-0d31-44ba-bbf4-19061a9637ce', $result);
     }
 
@@ -1230,8 +1227,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $funding = new Funding();
-        $result = $this->client->deleteFunding($funding);
+        $result = $this->client->deleteFunding('bba5f263-3442-4a4e-8b2b-752a238b9c03');
         $this->assertSame('bba5f263-3442-4a4e-8b2b-752a238b9c03', $result);
     }
 
@@ -1275,8 +1271,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $imprint = new imprint();
-        $result = $this->client->deleteImprint($imprint);
+        $result = $this->client->deleteImprint('7485750d-c8cf-4a7e-9a6c-c080b932dbd9');
         $this->assertSame('7485750d-c8cf-4a7e-9a6c-c080b932dbd9', $result);
     }
 
@@ -1320,8 +1315,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $institution = new Institution();
-        $result = $this->client->deleteInstitution($institution);
+        $result = $this->client->deleteInstitution('a71debc6-0172-4cf5-b4c4-f932915ffce3');
         $this->assertSame('a71debc6-0172-4cf5-b4c4-f932915ffce3', $result);
     }
 
@@ -1365,8 +1359,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $issue = new Issue();
-        $result = $this->client->deleteIssue($issue);
+        $result = $this->client->deleteIssue('df439ff0-a8ed-4972-aada-956fb0bb27ce');
         $this->assertSame('df439ff0-a8ed-4972-aada-956fb0bb27ce', $result);
     }
 
@@ -1410,8 +1403,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $language = new Language();
-        $result = $this->client->deleteLanguage($language);
+        $result = $this->client->deleteLanguage('1584d8e2-b856-4519-a507-c2399af11af5');
         $this->assertSame('1584d8e2-b856-4519-a507-c2399af11af5', $result);
     }
 
@@ -1455,8 +1447,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $location = new Location();
-        $result = $this->client->deleteLocation($location);
+        $result = $this->client->deleteLocation('c45e9a4a-80e1-46c2-8845-61bf4263255e');
         $this->assertSame('c45e9a4a-80e1-46c2-8845-61bf4263255e', $result);
     }
 
@@ -1500,8 +1491,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $price = new Price();
-        $result = $this->client->deletePrice($price);
+        $result = $this->client->deletePrice('38e96434-88a3-4f1c-9c39-b9160000c61a');
         $this->assertSame('38e96434-88a3-4f1c-9c39-b9160000c61a', $result);
     }
 
@@ -1545,8 +1535,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $publication = new Publication();
-        $result = $this->client->deletePublication($publication);
+        $result = $this->client->deletePublication('01fec4e9-fbff-4c2e-9752-a0562a506e4d');
         $this->assertSame('01fec4e9-fbff-4c2e-9752-a0562a506e4d', $result);
     }
 
@@ -1590,8 +1579,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $publisher = new Publisher();
-        $result = $this->client->deletePublisher($publisher);
+        $result = $this->client->deletePublisher('a77ef552-856c-4585-9d35-fd58d2190b1b');
         $this->assertSame('a77ef552-856c-4585-9d35-fd58d2190b1b', $result);
     }
 
@@ -1635,8 +1623,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $reference = new Reference();
-        $result = $this->client->deleteReference($reference);
+        $result = $this->client->deleteReference('6b4060ff-a89b-4bdc-b722-2b87ef9d057a');
         $this->assertSame('6b4060ff-a89b-4bdc-b722-2b87ef9d057a', $result);
     }
 
@@ -1680,8 +1667,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $series = new Series();
-        $result = $this->client->deleteSeries($series);
+        $result = $this->client->deleteSeries('dc4ed0f7-89a4-4760-aad3-adec7294706d');
         $this->assertSame('dc4ed0f7-89a4-4760-aad3-adec7294706d', $result);
     }
 
@@ -1725,8 +1711,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $subject = new subject();
-        $result = $this->client->deleteSubject($subject);
+        $result = $this->client->deleteSubject('e7ab386e-186a-4b1c-aa6f-e974b8a1e3cd');
         $this->assertSame('e7ab386e-186a-4b1c-aa6f-e974b8a1e3cd', $result);
     }
 
@@ -1770,8 +1755,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $work = new Work();
-        $result = $this->client->deleteWork($work);
+        $result = $this->client->deleteWork('d81bab71-d9fe-456b-9951-2308b91db2b4');
         $this->assertSame('d81bab71-d9fe-456b-9951-2308b91db2b4', $result);
     }
 
@@ -1815,8 +1799,7 @@ final class ClientTest extends TestCase
             ]
         ])));
 
-        $workRelation = new WorkRelation();
-        $result = $this->client->deleteWorkRelation($workRelation);
+        $result = $this->client->deleteWorkRelation('64019725-3e50-41de-a785-e4e5ddc4620a');
         $this->assertSame('64019725-3e50-41de-a785-e4e5ddc4620a', $result);
     }
 
