@@ -325,257 +325,257 @@ class Client
 
     public function createAffiliation(Affiliation $affiliation): string
     {
-        return $this->mutation('createAffiliation', $affiliation, 'affiliationId');
+        return $this->mutation('createAffiliation', $affiliation->getAllData(), 'affiliationId');
     }
 
     public function updateAffiliation(Affiliation $affiliation): string
     {
-        return $this->mutation('updateAffiliation', $affiliation, 'affiliationId');
+        return $this->mutation('updateAffiliation', $affiliation->getAllData(), 'affiliationId');
     }
 
-    public function deleteAffiliation(Affiliation $affiliation): string
+    public function deleteAffiliation(string $affiliationId): string
     {
-        return $this->mutation('deleteAffiliation', $affiliation, 'affiliationId');
+        return $this->mutation('deleteAffiliation', ['affiliationId' => $affiliationId], 'affiliationId');
     }
 
     public function createContribution(Contribution $contribution): string
     {
-        return $this->mutation('createContribution', $contribution, 'contributionId');
+        return $this->mutation('createContribution', $contribution->getAllData(), 'contributionId');
     }
 
     public function updateContribution(Contribution $contribution): string
     {
-        return $this->mutation('updateContribution', $contribution, 'contributionId');
+        return $this->mutation('updateContribution', $contribution->getAllData(), 'contributionId');
     }
 
-    public function deleteContribution(Contribution $contribution): string
+    public function deleteContribution(string $contributionId): string
     {
-        return $this->mutation('deleteContribution', $contribution, 'contributionId');
+        return $this->mutation('deleteContribution', ['contributionId' => $contributionId], 'contributionId');
     }
 
     public function createContributor(Contributor $contributor): string
     {
-        return $this->mutation('createContributor', $contributor, 'contributorId');
+        return $this->mutation('createContributor', $contributor->getAllData(), 'contributorId');
     }
 
     public function updateContributor(Contributor $contributor): string
     {
-        return $this->mutation('updateContributor', $contributor, 'contributorId');
+        return $this->mutation('updateContributor', $contributor->getAllData(), 'contributorId');
     }
 
-    public function deleteContributor(Contributor $contributor): string
+    public function deleteContributor(string $contributorId): string
     {
-        return $this->mutation('deleteContributor', $contributor, 'contributorId');
+        return $this->mutation('deleteContributor', ['contributorId' => $contributorId], 'contributorId');
     }
 
     public function createFunding(Funding $funding): string
     {
-        return $this->mutation('createFunding', $funding, 'fundingId');
+        return $this->mutation('createFunding', $funding->getAllData(), 'fundingId');
     }
 
     public function updateFunding(Funding $funding): string
     {
-        return $this->mutation('updateFunding', $funding, 'fundingId');
+        return $this->mutation('updateFunding', $funding->getAllData(), 'fundingId');
     }
 
-    public function deleteFunding(Funding $funding): string
+    public function deleteFunding(string $fundingId): string
     {
-        return $this->mutation('deleteFunding', $funding, 'fundingId');
+        return $this->mutation('deleteFunding', ['fundingId' => $fundingId], 'fundingId');
     }
 
     public function createImprint(Imprint $imprint): string
     {
-        return $this->mutation('createImprint', $imprint, 'imprintId');
+        return $this->mutation('createImprint', $imprint->getAllData(), 'imprintId');
     }
 
     public function updateImprint(Imprint $imprint): string
     {
-        return $this->mutation('updateImprint', $imprint, 'imprintId');
+        return $this->mutation('updateImprint', $imprint->getAllData(), 'imprintId');
     }
 
-    public function deleteImprint(Imprint $imprint): string
+    public function deleteImprint(string $imprintId): string
     {
-        return $this->mutation('deleteImprint', $imprint, 'imprintId');
+        return $this->mutation('deleteImprint', ['imprintId' => $imprintId], 'imprintId');
     }
 
     public function createInstitution(Institution $institution): string
     {
-        return $this->mutation('createInstitution', $institution, 'institutionId');
+        return $this->mutation('createInstitution', $institution->getAllData(), 'institutionId');
     }
 
     public function updateInstitution(Institution $institution): string
     {
-        return $this->mutation('updateInstitution', $institution, 'institutionId');
+        return $this->mutation('updateInstitution', $institution->getAllData(), 'institutionId');
     }
 
-    public function deleteInstitution(Institution $institution): string
+    public function deleteInstitution(string $institutionId): string
     {
-        return $this->mutation('deleteInstitution', $institution, 'institutionId');
+        return $this->mutation('deleteInstitution', ['institutionId' => $institutionId], 'institutionId');
     }
 
     public function createIssue(Issue $issue): string
     {
-        return $this->mutation('createIssue', $issue, 'issueId');
+        return $this->mutation('createIssue', $issue->getAllData(), 'issueId');
     }
 
     public function updateIssue(Issue $issue): string
     {
-        return $this->mutation('updateIssue', $issue, 'issueId');
+        return $this->mutation('updateIssue', $issue->getAllData(), 'issueId');
     }
 
-    public function deleteIssue(Issue $issue): string
+    public function deleteIssue(string $issueId): string
     {
-        return $this->mutation('deleteIssue', $issue, 'issueId');
+        return $this->mutation('deleteIssue', ['issueId' => $issueId], 'issueId');
     }
 
     public function createLanguage(Language $language): string
     {
-        return $this->mutation('createLanguage', $language, 'languageId');
+        return $this->mutation('createLanguage', $language->getAllData(), 'languageId');
     }
 
     public function updateLanguage(Language $language): string
     {
-        return $this->mutation('updateLanguage', $language, 'languageId');
+        return $this->mutation('updateLanguage', $language->getAllData(), 'languageId');
     }
 
-    public function deleteLanguage(Language $language): string
+    public function deleteLanguage(string $languageId): string
     {
-        return $this->mutation('deleteLanguage', $language, 'languageId');
+        return $this->mutation('deleteLanguage', ['languageId' => $languageId], 'languageId');
     }
 
     public function createLocation(Location $location): string
     {
-        return $this->mutation('createLocation', $location, 'locationId');
+        return $this->mutation('createLocation', $location->getAllData(), 'locationId');
     }
 
     public function updateLocation(Location $location): string
     {
-        return $this->mutation('updateLocation', $location, 'locationId');
+        return $this->mutation('updateLocation', $location->getAllData(), 'locationId');
     }
 
-    public function deleteLocation(Location $location): string
+    public function deleteLocation(string $locationId): string
     {
-        return $this->mutation('deleteLocation', $location, 'locationId');
+        return $this->mutation('deleteLocation', ['locationId' => $locationId], 'locationId');
     }
 
     public function createPrice(Price $price): string
     {
-        return $this->mutation('createPrice', $price, 'priceId');
+        return $this->mutation('createPrice', $price->getAllData(), 'priceId');
     }
 
     public function updatePrice(Price $price): string
     {
-        return $this->mutation('updatePrice', $price, 'priceId');
+        return $this->mutation('updatePrice', $price->getAllData(), 'priceId');
     }
 
-    public function deletePrice(Price $price): string
+    public function deletePrice(string $priceId): string
     {
-        return $this->mutation('deletePrice', $price, 'priceId');
+        return $this->mutation('deletePrice', ['priceId' => $priceId], 'priceId');
     }
 
     public function createPublication(Publication $publication): string
     {
-        return $this->mutation('createPublication', $publication, 'publicationId');
+        return $this->mutation('createPublication', $publication->getAllData(), 'publicationId');
     }
 
     public function updatePublication(Publication $publication): string
     {
-        return $this->mutation('updatePublication', $publication, 'publicationId');
+        return $this->mutation('updatePublication', $publication->getAllData(), 'publicationId');
     }
 
-    public function deletePublication(Publication $publication): string
+    public function deletePublication(string $publicationId): string
     {
-        return $this->mutation('deletePublication', $publication, 'publicationId');
+        return $this->mutation('deletePublication', ['publicationId' => $publicationId], 'publicationId');
     }
 
     public function createPublisher(Publisher $publisher): string
     {
-        return $this->mutation('createPublisher', $publisher, 'publisherId');
+        return $this->mutation('createPublisher', $publisher->getAllData(), 'publisherId');
     }
 
     public function updatePublisher(Publisher $publisher): string
     {
-        return $this->mutation('updatePublisher', $publisher, 'publisherId');
+        return $this->mutation('updatePublisher', $publisher->getAllData(), 'publisherId');
     }
 
-    public function deletePublisher(Publisher $publisher): string
+    public function deletePublisher(string $publisherId): string
     {
-        return $this->mutation('deletePublisher', $publisher, 'publisherId');
+        return $this->mutation('deletePublisher', ['publisherId' => $publisherId], 'publisherId');
     }
 
     public function createReference(Reference $reference): string
     {
-        return $this->mutation('createReference', $reference, 'referenceId');
+        return $this->mutation('createReference', $reference->getAllData(), 'referenceId');
     }
 
     public function updateReference(Reference $reference): string
     {
-        return $this->mutation('updateReference', $reference, 'referenceId');
+        return $this->mutation('updateReference', $reference->getAllData(), 'referenceId');
     }
 
-    public function deleteReference(Reference $reference): string
+    public function deleteReference(string $referenceId): string
     {
-        return $this->mutation('deleteReference', $reference, 'referenceId');
+        return $this->mutation('deleteReference', ['referenceId' => $referenceId], 'referenceId');
     }
 
     public function createSeries(Series $series): string
     {
-        return $this->mutation('createSeries', $series, 'seriesId');
+        return $this->mutation('createSeries', $series->getAllData(), 'seriesId');
     }
 
     public function updateSeries(Series $series): string
     {
-        return $this->mutation('updateSeries', $series, 'seriesId');
+        return $this->mutation('updateSeries', $series->getAllData(), 'seriesId');
     }
 
-    public function deleteSeries(Series $series): string
+    public function deleteSeries(string $seriesId): string
     {
-        return $this->mutation('deleteSeries', $series, 'seriesId');
+        return $this->mutation('deleteSeries', ['seriesId' => $seriesId], 'seriesId');
     }
 
     public function createSubject(Subject $subject): string
     {
-        return $this->mutation('createSubject', $subject, 'subjectId');
+        return $this->mutation('createSubject', $subject->getAllData(), 'subjectId');
     }
 
     public function updateSubject(Subject $subject): string
     {
-        return $this->mutation('updateSubject', $subject, 'subjectId');
+        return $this->mutation('updateSubject', $subject->getAllData(), 'subjectId');
     }
 
-    public function deleteSubject(Subject $subject): string
+    public function deleteSubject(string $subjectId): string
     {
-        return $this->mutation('deleteSubject', $subject, 'subjectId');
+        return $this->mutation('deleteSubject', ['subjectId' => $subjectId], 'subjectId');
     }
 
     public function createWork(Work $work): string
     {
-        return $this->mutation('createWork', $work, 'workId');
+        return $this->mutation('createWork', $work->getAllData(), 'workId');
     }
 
     public function updateWork(Work $work): string
     {
-        return $this->mutation('updateWork', $work, 'workId');
+        return $this->mutation('updateWork', $work->getAllData(), 'workId');
     }
 
-    public function deleteWork(Work $work): string
+    public function deleteWork(string $workId): string
     {
-        return $this->mutation('deleteWork', $work, 'workId');
+        return $this->mutation('deleteWork', ['workId' => $workId], 'workId');
     }
 
     public function createWorkRelation(WorkRelation $workRelation): string
     {
-        return $this->mutation('createWorkRelation', $workRelation, 'workRelationId');
+        return $this->mutation('createWorkRelation', $workRelation->getAllData(), 'workRelationId');
     }
 
     public function updateWorkRelation(WorkRelation $workRelation): string
     {
-        return $this->mutation('updateWorkRelation', $workRelation, 'workRelationId');
+        return $this->mutation('updateWorkRelation', $workRelation->getAllData(), 'workRelationId');
     }
 
-    public function deleteWorkRelation(WorkRelation $workRelation): string
+    public function deleteWorkRelation(string $workRelationId): string
     {
-        return $this->mutation('deleteWorkRelation', $workRelation, 'workRelationId');
+        return $this->mutation('deleteWorkRelation', ['workRelationId' => $workRelationId], 'workRelationId');
     }
 
     public function rawQuery(string $rawQuery, array $args = []): array
@@ -624,9 +624,9 @@ class Client
         return new $entityClass($result[$queryName]);
     }
 
-    private function mutation(string $mutationName, AbstractModel $mutationObject, string $returnValue): string
+    private function mutation(string $mutationName, array $data, string $returnValue): string
     {
-        $mutation = MutationBuilder::build($mutationName, $mutationObject->getAllData());
+        $mutation = MutationBuilder::build($mutationName, $data);
         $response = $this->request->runQuery($mutation, null, $this->token);
         $data = $response->getData();
         return $data[$mutationName][$returnValue];
