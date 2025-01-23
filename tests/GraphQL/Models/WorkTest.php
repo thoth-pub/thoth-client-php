@@ -17,6 +17,7 @@ final class WorkTest extends TestCase
         $subtitle = 'Neque porro quisquam est';
         $reference = 'foo';
         $edition = 1;
+        $imprintId = 'ec3aff35-11df-4bd3-8dd6-1e186ca8c165';
         $doi = 'https://doi.org/10.00000/00000000';
         $publicationDate = '2020-01-01';
         $withdrawnDate = '2020-12-12';
@@ -56,6 +57,7 @@ final class WorkTest extends TestCase
         $work->setSubtitle($subtitle);
         $work->setReference($reference);
         $work->setEdition($edition);
+        $work->setImprintId($imprintId);
         $work->setDoi($doi);
         $work->setPublicationDate($publicationDate);
         $work->setWithdrawnDate($withdrawnDate);
@@ -90,6 +92,7 @@ final class WorkTest extends TestCase
         $this->assertSame($subtitle, $work->getSubtitle());
         $this->assertSame($reference, $work->getReference());
         $this->assertSame($edition, $work->getEdition());
+        $this->assertSame($imprintId, $work->getImprintId());
         $this->assertSame($doi, $work->getDoi());
         $this->assertSame($publicationDate, $work->getPublicationDate());
         $this->assertSame($withdrawnDate, $work->getWithdrawnDate());

@@ -25,7 +25,7 @@ class Account
     public function details(string $token): array
     {
         $response = $this->request->execute('GET', self::THOTH_ACCOUNT_ENDPOINT, ['headers' => [
-            'Authorization' => 'Bearer' . $token
+            'Authorization' => 'Bearer ' . $token
         ]]);
 
         return json_decode($response->getBody(), true);
