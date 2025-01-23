@@ -98,6 +98,16 @@ class Work extends AbstractModel
         $this->setData('edition', $edition);
     }
 
+    public function getImprintId(): ?string
+    {
+        return $this->getData('imprintId');
+    }
+
+    public function setImprintId(?string $imprintId): void
+    {
+        $this->setData('imprintId', $imprintId);
+    }
+
     public function getDoi(): ?string
     {
         return $this->getData('doi');
