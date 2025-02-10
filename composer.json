@@ -20,5 +20,9 @@
         "psr-4": {
             "ThothApi\\Tests\\": "tests/"
         }
+    },
+    "scripts" : {
+        "test": "vendor/bin/phpunit --colors --testdox tests/",
+        "lint": "vendor/bin/php-cs-fixer fix -v --diff --allow-risky=yes --config=.php-cs-fixer.php"
     }
 }
