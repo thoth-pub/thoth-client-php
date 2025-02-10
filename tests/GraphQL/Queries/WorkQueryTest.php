@@ -105,6 +105,7 @@ final class WorkQueryTest extends TestCase
         return <<<GQL
         fragment workFields on Work {
             workId
+            imprintId
             workType
             workStatus
             fullTitle

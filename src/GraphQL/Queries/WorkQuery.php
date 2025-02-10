@@ -83,6 +83,7 @@ class WorkQuery extends AbstractQuery
         return <<<GQL
         fragment workFields on Work {
             workId
+            imprintId
             workType
             workStatus
             fullTitle
