@@ -37,6 +37,12 @@ class Client
         $this->request = new Request($httpConfig);
     }
 
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+        return $this;
+    }
+
     public function login(string $email, string $password): self
     {
         $this->token = (new Account($this->request))->login($email, $password);
