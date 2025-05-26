@@ -13,28 +13,42 @@ final class PublicationTest extends TestCase
         $workId = 'ad904728-2f96-4cbb-973f-70b4414cf27e';
         $publicationType = Publication::PUBLICATION_TYPE_PAPERBACK;
         $isbn = '987-6-54321-234-5';
-        $width = 156.0;
-        $height = 234.0;
-        $depth = 25.0;
-        $weight = 206.0;
+        $widthMm = 156.0;
+        $heightMm = 234.0;
+        $depthMm = 25.0;
+        $weightG = 206.0;
 
         $publication = new Publication();
         $publication->setPublicationId($publicationId);
         $publication->setWorkId($workId);
         $publication->setPublicationType($publicationType);
         $publication->setIsbn($isbn);
-        $publication->setWidth($width);
-        $publication->setHeight($height);
-        $publication->setDepth($depth);
-        $publication->setWeight($weight);
+        $publication->setWidthMm($widthMm);
+        $publication->setHeightMm($heightMm);
+        $publication->setDepthMm($depthMm);
+        $publication->setWeightG($weightG);
 
         $this->assertSame($publicationId, $publication->getPublicationId());
         $this->assertSame($workId, $publication->getWorkId());
         $this->assertSame($publicationType, $publication->getPublicationType());
         $this->assertSame($isbn, $publication->getIsbn());
-        $this->assertSame($width, $publication->getWidth());
-        $this->assertSame($height, $publication->getHeight());
-        $this->assertSame($depth, $publication->getDepth());
-        $this->assertSame($weight, $publication->getWeight());
+        $this->assertSame($widthMm, $publication->getWidthMm());
+        $this->assertSame($heightMm, $publication->getHeightMm());
+        $this->assertSame($depthMm, $publication->getDepthMm());
+        $this->assertSame($weightG, $publication->getWeightG());
+    }
+
+    public function testGettersAndSettersWithConvention(): void
+    {
+        $publication = new Publication();
+        $publication->setWidthMm(156, true);
+        $publication->setHeightMm(234, true);
+        $publication->setDepthMm(5, true);
+        $publication->setWeightG(206, true);
+
+        $this->assertSame(6.14, $publication->getWidthIn());
+        $this->assertSame(9.21, $publication->getHeightIn());
+        $this->assertSame(0.2, $publication->getDepthIn());
+        $this->assertSame(7.2664, $publication->getWeightOz());
     }
 }

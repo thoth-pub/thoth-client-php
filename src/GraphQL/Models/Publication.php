@@ -57,43 +57,115 @@ class Publication extends AbstractModel
         $this->setData('isbn', $isbn);
     }
 
-    public function getWidth(): ?float
+    public function getWidthMm(): ?float
     {
-        return $this->getData('width');
+        return $this->getData('widthMm');
     }
 
-    public function setWidth(?float $width): void
+    public function setWidthMm(?float $widthMm, bool $convert = false): void
     {
-        $this->setData('width', $width);
+        $this->setData('widthMm', $widthMm);
+
+        if ($convert) {
+            $this->setData('widthIn', $widthMm ? round($widthMm / 25.4, 2) : null);
+        }
     }
 
-    public function getHeight(): ?float
+    public function getWidthIn(): ?float
     {
-        return $this->getData('height');
+        return $this->getData('widthIn');
     }
 
-    public function setHeight(?float $height): void
+    public function setWidthIn(?float $widthIn, bool $convert = false): void
     {
-        $this->setData('height', $height);
+        $this->setData('widthIn', $widthIn);
+
+        if ($convert) {
+            $this->setData('widthMm', $widthIn ? round($widthIn * 25.4, 2) : null);
+        }
     }
 
-    public function getDepth(): ?float
+    public function getHeightMm(): ?float
     {
-        return $this->getData('depth');
+        return $this->getData('heightMm');
     }
 
-    public function setDepth(?float $depth): void
+    public function setHeightMm(?float $heightMm, bool $convert = false): void
     {
-        $this->setData('depth', $depth);
+        $this->setData('heightMm', $heightMm);
+
+        if ($convert) {
+            $this->setData('heightIn', $heightMm ? round($heightMm / 25.4, 2) : null);
+        }
     }
 
-    public function getWeight(): ?float
+    public function getHeightIn(): ?float
     {
-        return $this->getData('weight');
+        return $this->getData('heightIn');
     }
 
-    public function setWeight(?float $weight): void
+    public function setHeightIn(?float $heightIn, bool $convert = false): void
     {
-        $this->setData('weight', $weight);
+        $this->setData('heightIn', $heightIn);
+
+        if ($convert) {
+            $this->setData('heightMm', $heightIn ? round($heightIn * 25.4, 2) : null);
+        }
+    }
+
+    public function getDepthMm(): ?float
+    {
+        return $this->getData('depthMm');
+    }
+
+    public function setDepthMm(?float $depthMm, bool $convert = false): void
+    {
+        $this->setData('depthMm', $depthMm);
+
+        if ($convert) {
+            $this->setData('depthIn', $depthMm ? round($depthMm / 25.4, 2) : null);
+        }
+    }
+
+    public function getDepthIn(): ?float
+    {
+        return $this->getData('depthIn');
+    }
+
+    public function setDepthIn(?float $depthIn, bool $convert = false): void
+    {
+        $this->setData('depthIn', $depthIn);
+
+        if ($convert) {
+            $this->setData('depthMm', $depthIn ? round($depthIn * 25.4, 2) : null);
+        }
+    }
+
+    public function getWeightG(): ?float
+    {
+        return $this->getData('weightG');
+    }
+
+    public function setWeightG(?float $weightG, bool $convert = false): void
+    {
+        $this->setData('weightG', $weightG);
+
+        if ($convert) {
+            $this->setData('weightOz', $weightG ? round($weightG / 28.349523125, 4) : null);
+        }
+    }
+
+    public function getWeightOz(): ?float
+    {
+        return $this->getData('weightOz');
+    }
+
+    public function setWeightOz(?float $weightOz, bool $convert = false): void
+    {
+        $this->setData('weightOz', $weightOz);
+
+        if ($convert) {
+            $this->setData('weightG', $weightOz ? round($weightOz * 28.349523125, 4) : null);
+        }
     }
 }
