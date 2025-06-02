@@ -17,12 +17,12 @@ final class PriceTest extends TestCase
         $price = new Price();
         $price->setPriceId($priceId);
         $price->setPublicationId($publicationId);
-        $price->setCurrentCode($currentCode);
+        $price->setCurrencyCode($currentCode);
         $price->setUnitPrice($unitPrice);
 
         $this->assertSame($priceId, $price->getPriceId());
         $this->assertSame($publicationId, $price->getPublicationId());
-        $this->assertSame($currentCode, $price->getCurrentCode());
+        $this->assertSame($currentCode, $price->getCurrencyCode());
         $this->assertSame($unitPrice, $price->getUnitPrice());
     }
 }

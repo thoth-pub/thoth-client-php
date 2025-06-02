@@ -24,14 +24,14 @@ class Price extends AbstractModel
         $this->setData('publicationId', $publicationId);
     }
 
-    public function getCurrentCode(): ?string
+    public function getCurrencyCode(): ?string
     {
-        return $this->getData('currentCode');
+        return $this->getData('currencyCode');
     }
 
-    public function setCurrentCode(?string $currentCode): void
+    public function setCurrencyCode(?string $currencyCode): void
     {
-        $this->setData('currentCode', $currentCode);
+        $this->setData('currencyCode', $currencyCode);
     }
 
     public function getUnitPrice(): ?float
