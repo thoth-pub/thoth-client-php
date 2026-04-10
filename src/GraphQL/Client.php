@@ -56,7 +56,7 @@ class Client
     private function getMany(string $entityName, array $args = []): array
     {
         $entityClass = $this->getModelClass($entityName);
-        $queryName = $entityName . ($entityName !== 'series' ? 's' : 'es');
+        $queryName = $this->getPluralQueryName($entityName);
 
         $result = $this->query($queryName, $args);
         return array_map(fn ($data) => new $entityClass($data), $result[$queryName]);
@@ -115,6 +115,18 @@ class Client
                 return 'workFeaturedVideoId';
             default:
                 return $entityName . 'Id';
+        }
+    }
+
+    private function getPluralQueryName(string $entityName): string
+    {
+        switch ($entityName) {
+            case 'biography':
+                return 'biographies';
+            case 'series':
+                return 'serieses';
+            default:
+                return $entityName . 's';
         }
     }
 

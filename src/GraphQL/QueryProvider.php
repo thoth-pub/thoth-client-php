@@ -87,7 +87,7 @@ class QueryProvider
     {
         return [
             $name => $queryObject->getQuery(),
-            $name . ($name !== 'series' ? 's' : 'es') => $queryObject->getManyQuery(),
+            self::getPluralQueryName($name) => $queryObject->getManyQuery(),
             $name . 'Count' => $queryObject->getCountQuery(),
         ];
     }
@@ -112,7 +112,19 @@ class QueryProvider
     {
         return [
             $name => $queryObject->getQuery(),
-            $name . 's' => $queryObject->getManyQuery(),
+            self::getPluralQueryName($name) => $queryObject->getManyQuery(),
         ];
+    }
+
+    private static function getPluralQueryName(string $name): string
+    {
+        switch ($name) {
+            case 'biography':
+                return 'biographies';
+            case 'series':
+                return 'serieses';
+            default:
+                return $name . 's';
+        }
     }
 }
