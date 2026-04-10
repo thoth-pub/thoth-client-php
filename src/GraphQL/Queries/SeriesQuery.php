@@ -8,8 +8,8 @@ class SeriesQuery extends AbstractQuery
     {
         return $this->buildQuery(
             <<<GQL
-            query(\$series: Uuid!) {
-                series(seriesId: \$series) {
+            query(\$seriesId: Uuid!) {
+                series(seriesId: \$seriesId) {
                     ...seriesFields
                 }
             }

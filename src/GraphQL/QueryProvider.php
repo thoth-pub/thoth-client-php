@@ -3,22 +3,33 @@
 namespace ThothApi\GraphQL;
 
 use ThothApi\GraphQL\Queries\AbstractQuery;
+use ThothApi\GraphQL\Queries\AbstractTextQuery;
 use ThothApi\GraphQL\Queries\AffiliationQuery;
+use ThothApi\GraphQL\Queries\AdditionalResourceQuery;
+use ThothApi\GraphQL\Queries\AwardQuery;
+use ThothApi\GraphQL\Queries\BiographyQuery;
+use ThothApi\GraphQL\Queries\BookReviewQuery;
 use ThothApi\GraphQL\Queries\ContributionQuery;
 use ThothApi\GraphQL\Queries\ContributorQuery;
+use ThothApi\GraphQL\Queries\ContactQuery;
+use ThothApi\GraphQL\Queries\EndorsementQuery;
+use ThothApi\GraphQL\Queries\FileQuery;
 use ThothApi\GraphQL\Queries\FundingQuery;
 use ThothApi\GraphQL\Queries\ImprintQuery;
 use ThothApi\GraphQL\Queries\InstitutionQuery;
 use ThothApi\GraphQL\Queries\IssueQuery;
 use ThothApi\GraphQL\Queries\LanguageQuery;
 use ThothApi\GraphQL\Queries\LocationQuery;
+use ThothApi\GraphQL\Queries\MeQuery;
 use ThothApi\GraphQL\Queries\PriceQuery;
 use ThothApi\GraphQL\Queries\PublicationQuery;
 use ThothApi\GraphQL\Queries\PublisherQuery;
 use ThothApi\GraphQL\Queries\ReferenceQuery;
 use ThothApi\GraphQL\Queries\SeriesQuery;
 use ThothApi\GraphQL\Queries\SubjectQuery;
+use ThothApi\GraphQL\Queries\TitleQuery;
 use ThothApi\GraphQL\Queries\WorkQuery;
+use ThothApi\GraphQL\Queries\WorkFeaturedVideoQuery;
 
 class QueryProvider
 {
@@ -40,9 +51,16 @@ class QueryProvider
     private static function buildQueryMapping(): array
     {
         return array_merge(
+            self::mapQuery(new AdditionalResourceQuery(), 'additionalResource'),
             self::mapQuery(new AffiliationQuery(), 'affiliation'),
+            self::mapQuery(new AwardQuery(), 'award'),
+            self::mapMarkupQuery(new AbstractTextQuery(), 'abstract'),
+            self::mapMarkupQuery(new BiographyQuery(), 'biography'),
+            self::mapQuery(new BookReviewQuery(), 'bookReview'),
             self::mapQuery(new ContributionQuery(), 'contribution'),
             self::mapQuery(new ContributorQuery(), 'contributor'),
+            self::mapQuery(new ContactQuery(), 'contact'),
+            self::mapQuery(new EndorsementQuery(), 'endorsement'),
             self::mapQuery(new FundingQuery(), 'funding'),
             self::mapQuery(new ImprintQuery(), 'imprint'),
             self::mapQuery(new InstitutionQuery(), 'institution'),
@@ -55,7 +73,13 @@ class QueryProvider
             self::mapQuery(new ReferenceQuery(), 'reference'),
             self::mapQuery(new SeriesQuery(), 'series'),
             self::mapQuery(new SubjectQuery(), 'subject'),
-            self::mapWorkQueries(new WorkQuery())
+            self::mapMarkupQuery(new TitleQuery(), 'title'),
+            self::mapWorkQueries(new WorkQuery()),
+            self::mapQuery(new WorkFeaturedVideoQuery(), 'workFeaturedVideo'),
+            [
+                'file' => (new FileQuery())->getQuery(),
+                'me' => (new MeQuery())->getQuery(),
+            ]
         );
     }
 
@@ -81,6 +105,14 @@ class QueryProvider
             'works' => $workQuery->getManyQuery(),
             'workByDoi' => $workQuery->getByDoiQuery(),
             'workCount' => $workQuery->getCountQuery(),
+        ];
+    }
+
+    private static function mapMarkupQuery(AbstractQuery $queryObject, string $name): array
+    {
+        return [
+            $name => $queryObject->getQuery(),
+            $name . 's' => $queryObject->getManyQuery(),
         ];
     }
 }

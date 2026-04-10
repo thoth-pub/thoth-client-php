@@ -96,8 +96,7 @@ Se lanza una excepción del tipo *QueryException* en caso de error en la solicit
 ```php
 try {
     $work = new \ThothApi\GraphQL\Models\Work([
-        'fullTitle' => 'Foo Bar',
-        'title' => 'Foo',
+        'doi' => 'https://doi.org/10.00000/00000000',
     ]);
     $workId = $client->createWork($work);
 } catch (\ThothApi\Exception\QueryException $exception) {

@@ -2,15 +2,15 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LanguageQuery extends AbstractQuery
+class ContactQuery extends AbstractQuery
 {
     public function getQuery(): string
     {
         return $this->buildQuery(
             <<<GQL
-            query (\$languageId: Uuid!) {
-                language(languageId: \$languageId) {
-                    ...languageFields
+            query(\$contactId: Uuid!) {
+                contact(contactId: \$contactId) {
+                    ...contactFields
                 }
             }
             GQL
@@ -22,17 +22,14 @@ class LanguageQuery extends AbstractQuery
         return $this->buildQuery(
             <<<GQL
             query(
-                \$languageCodes: [LanguageCode!] = []
-                \$languageRelations: [LanguageRelation!] = []
                 \$limit: Int = 100
                 \$offset: Int = 0
-                \$field: LanguageField = LANGUAGE_CODE
+                \$field: ContactField = EMAIL
                 \$direction: Direction = ASC
                 \$publishers: [Uuid!] = []
+                \$contactTypes: [ContactType!] = []
             ) {
-                languages(
-                    languageCodes: \$languageCodes
-                    languageRelations: \$languageRelations
+                contacts(
                     limit: \$limit
                     offset: \$offset
                     order: {
@@ -40,8 +37,9 @@ class LanguageQuery extends AbstractQuery
                         direction: \$direction
                     }
                     publishers: \$publishers
+                    contactTypes: \$contactTypes
                 ) {
-                    ...languageFields
+                    ...contactFields
                 }
             }
             GQL
@@ -51,14 +49,8 @@ class LanguageQuery extends AbstractQuery
     public function getCountQuery(): string
     {
         return <<<GQL
-        query(
-            \$languageCodes: [LanguageCode!] = []
-            \$languageRelations: [LanguageRelation!] = []
-        ) {
-            languageCount(
-                languageCodes: \$languageCodes
-                languageRelations: \$languageRelations
-            )
+        query(\$contactTypes: [ContactType!] = []) {
+            contactCount(contactTypes: \$contactTypes)
         }
         GQL;
     }
@@ -66,11 +58,11 @@ class LanguageQuery extends AbstractQuery
     protected function getFieldsFragment(): string
     {
         return <<<GQL
-        fragment languageFields on Language {
-            languageId
-            workId
-            languageCode
-            languageRelation
+        fragment contactFields on Contact {
+            contactId
+            publisherId
+            contactType
+            email
         }
         GQL;
     }

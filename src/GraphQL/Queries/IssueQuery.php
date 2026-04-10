@@ -61,6 +61,7 @@ class IssueQuery extends AbstractQuery
             workId
             seriesId
             issueOrdinal
+            issueNumber
         }
         GQL;
     }

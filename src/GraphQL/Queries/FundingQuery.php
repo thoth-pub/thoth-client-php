@@ -64,7 +64,6 @@ class FundingQuery extends AbstractQuery
             projectName
             projectShortname
             grantNumber
-            jurisdiction
         }
         GQL;
     }

@@ -32,4 +32,19 @@ abstract class AbstractModel
             unset($this->data[$key]);
         }
     }
+
+    public function __call(string $name, array $arguments)
+    {
+        if (preg_match('/^(get|set|is)(.+)$/', $name, $matches) !== 1) {
+            throw new \BadMethodCallException("Method '{$name}' does not exist.");
+        }
+
+        $field = lcfirst($matches[2]);
+        if ($matches[1] === 'set') {
+            $this->setData($field, $arguments[0] ?? null);
+            return;
+        }
+
+        return $this->getData($field);
+    }
 }

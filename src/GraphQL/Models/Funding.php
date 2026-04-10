@@ -56,12 +56,12 @@ class Funding extends AbstractModel
 
     public function getProjectShortName(): ?string
     {
-        return $this->getData('projectShortName');
+        return $this->getData('projectShortname');
     }
 
     public function setProjectShortName(?string $projectShortName): void
     {
-        $this->setData('projectShortName', $projectShortName);
+        $this->setData('projectShortname', $projectShortName);
     }
 
     public function getGrantNumber(): ?string

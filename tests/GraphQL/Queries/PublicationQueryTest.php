@@ -102,6 +102,10 @@ final class PublicationQueryTest extends TestCase
             height(units: \$lengthUnit)
             depth(units: \$lengthUnit)
             weight(units: \$weightUnit)
+            accessibilityStandard
+            accessibilityAdditionalStandard
+            accessibilityException
+            accessibilityReportUrl
         }
         GQL;
     }

@@ -4,43 +4,106 @@ namespace ThothApi\GraphQL;
 
 class MutationBuilder
 {
-    public static function build(string $mutationName, array $mutationData): string
+    public static function build(string $mutationName, array $mutationData, array|bool $extraArgs = []): string
     {
+        $nestedOverride = null;
+        if (is_bool($extraArgs)) {
+            $nestedOverride = $extraArgs;
+            $extraArgs = [];
+        }
+
         $mutationFields = self::getMutationFields($mutationName);
         if ($mutationFields === null) {
             throw new \InvalidArgumentException("Mutation '{$mutationName}' not found.");
         }
 
-        $nested = !str_contains($mutationName, 'delete');
-        $fields = $mutationFields['fields'];
-        $returnValue = $mutationFields['returnValue'];
-        $data = self::prepareData($fields, $mutationData);
+        $nested = $nestedOverride ?? ($mutationFields['nested'] ?? !str_starts_with($mutationName, 'delete'));
+        $data = self::prepareData($mutationFields['fields'], $mutationData);
+        $args = [];
 
-        $dataStr = $nested ? 'data: {%s}' : '%s';
+        if ($nested) {
+            $args[] = 'data: {' . $data . '}';
+        } else {
+            $args[] = $data;
+        }
+
+        if (isset($mutationFields['extraArgs'])) {
+            $extra = self::prepareData($mutationFields['extraArgs'], $extraArgs);
+            if ($extra !== '') {
+                $args[] = $extra;
+            }
+        }
+
+        $args = array_filter($args, fn ($value) => $value !== '');
         $mutationStr = <<<GQL
         mutation {
             %s(
-                {$dataStr}
+                %s
             ) {
                 %s
             }
         }
         GQL;
 
-        return sprintf($mutationStr, $mutationName, $data, $returnValue);
+        return sprintf($mutationStr, $mutationName, implode(",\n                ", $args), $mutationFields['returnValue']);
     }
 
     private static function getMutationFields(string $mutationName): ?array
     {
+        $markupArg = ['markupFormat' => true];
+        $uploadFields = [
+            'declaredMimeType' => false,
+            'declaredExtension' => false,
+            'declaredSha256' => false,
+        ];
+
         $mapping = [
+            'createAdditionalResource' => [
+                'fields' => [
+                    'workId' => false,
+                    'title' => false,
+                    'description' => false,
+                    'attribution' => false,
+                    'resourceType' => true,
+                    'doi' => false,
+                    'handle' => false,
+                    'url' => false,
+                    'date' => false,
+                    'resourceOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'workResourceId',
+            ],
+            'updateAdditionalResource' => [
+                'fields' => [
+                    'additionalResourceId' => false,
+                    'workId' => false,
+                    'title' => false,
+                    'description' => false,
+                    'attribution' => false,
+                    'resourceType' => true,
+                    'doi' => false,
+                    'handle' => false,
+                    'url' => false,
+                    'date' => false,
+                    'resourceOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'workResourceId',
+            ],
+            'deleteAdditionalResource' => [
+                'fields' => ['additionalResourceId' => false],
+                'nested' => false,
+                'returnValue' => 'workResourceId',
+            ],
             'createAffiliation' => [
                 'fields' => [
                     'contributionId' => false,
                     'institutionId' => false,
                     'affiliationOrdinal' => false,
-                    'position' => false
+                    'position' => false,
                 ],
-                'returnValue' => 'affiliationId'
+                'returnValue' => 'affiliationId',
             ],
             'updateAffiliation' => [
                 'fields' => [
@@ -48,15 +111,176 @@ class MutationBuilder
                     'contributionId' => false,
                     'institutionId' => false,
                     'affiliationOrdinal' => false,
-                    'position' => false
+                    'position' => false,
                 ],
-                'returnValue' => 'affiliationId'
+                'returnValue' => 'affiliationId',
             ],
             'deleteAffiliation' => [
+                'fields' => ['affiliationId' => false],
+                'nested' => false,
+                'returnValue' => 'affiliationId',
+            ],
+            'createAbstract' => [
                 'fields' => [
-                    'affiliationId' => false,
+                    'workId' => false,
+                    'content' => false,
+                    'localeCode' => true,
+                    'abstractType' => true,
+                    'canonical' => false,
                 ],
-                'returnValue' => 'affiliationId'
+                'extraArgs' => $markupArg,
+                'returnValue' => 'abstractId',
+            ],
+            'updateAbstract' => [
+                'fields' => [
+                    'abstractId' => false,
+                    'workId' => false,
+                    'content' => false,
+                    'localeCode' => true,
+                    'abstractType' => true,
+                    'canonical' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'abstractId',
+            ],
+            'deleteAbstract' => [
+                'fields' => ['abstractId' => false],
+                'nested' => false,
+                'returnValue' => 'abstractId',
+            ],
+            'createAward' => [
+                'fields' => [
+                    'workId' => false,
+                    'title' => false,
+                    'url' => false,
+                    'category' => false,
+                    'year' => false,
+                    'jury' => false,
+                    'country' => true,
+                    'prizeStatement' => false,
+                    'role' => true,
+                    'awardOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'awardId',
+            ],
+            'updateAward' => [
+                'fields' => [
+                    'awardId' => false,
+                    'workId' => false,
+                    'title' => false,
+                    'url' => false,
+                    'category' => false,
+                    'year' => false,
+                    'jury' => false,
+                    'country' => true,
+                    'prizeStatement' => false,
+                    'role' => true,
+                    'awardOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'awardId',
+            ],
+            'deleteAward' => [
+                'fields' => ['awardId' => false],
+                'nested' => false,
+                'returnValue' => 'awardId',
+            ],
+            'createBiography' => [
+                'fields' => [
+                    'contributionId' => false,
+                    'content' => false,
+                    'canonical' => false,
+                    'localeCode' => true,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'biographyId',
+            ],
+            'updateBiography' => [
+                'fields' => [
+                    'biographyId' => false,
+                    'contributionId' => false,
+                    'content' => false,
+                    'canonical' => false,
+                    'localeCode' => true,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'biographyId',
+            ],
+            'deleteBiography' => [
+                'fields' => ['biographyId' => false],
+                'nested' => false,
+                'returnValue' => 'biographyId',
+            ],
+            'createBookReview' => [
+                'fields' => [
+                    'workId' => false,
+                    'title' => false,
+                    'authorName' => false,
+                    'reviewerOrcid' => false,
+                    'reviewerInstitutionId' => false,
+                    'url' => false,
+                    'doi' => false,
+                    'reviewDate' => false,
+                    'journalName' => false,
+                    'journalVolume' => false,
+                    'journalNumber' => false,
+                    'journalIssn' => false,
+                    'pageRange' => false,
+                    'text' => false,
+                    'reviewOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'bookReviewId',
+            ],
+            'updateBookReview' => [
+                'fields' => [
+                    'bookReviewId' => false,
+                    'workId' => false,
+                    'title' => false,
+                    'authorName' => false,
+                    'reviewerOrcid' => false,
+                    'reviewerInstitutionId' => false,
+                    'url' => false,
+                    'doi' => false,
+                    'reviewDate' => false,
+                    'journalName' => false,
+                    'journalVolume' => false,
+                    'journalNumber' => false,
+                    'journalIssn' => false,
+                    'pageRange' => false,
+                    'text' => false,
+                    'reviewOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'bookReviewId',
+            ],
+            'deleteBookReview' => [
+                'fields' => ['bookReviewId' => false],
+                'nested' => false,
+                'returnValue' => 'bookReviewId',
+            ],
+            'createContact' => [
+                'fields' => [
+                    'publisherId' => false,
+                    'contactType' => true,
+                    'email' => false,
+                ],
+                'returnValue' => 'contactId',
+            ],
+            'updateContact' => [
+                'fields' => [
+                    'contactId' => false,
+                    'publisherId' => false,
+                    'contactType' => true,
+                    'email' => false,
+                ],
+                'returnValue' => 'contactId',
+            ],
+            'deleteContact' => [
+                'fields' => ['contactId' => false],
+                'nested' => false,
+                'returnValue' => 'contactId',
             ],
             'createContribution' => [
                 'fields' => [
@@ -68,9 +292,8 @@ class MutationBuilder
                     'firstName' => false,
                     'lastName' => false,
                     'fullName' => false,
-                    'biography' => false
                 ],
-                'returnValue' => 'contributionId'
+                'returnValue' => 'contributionId',
             ],
             'updateContribution' => [
                 'fields' => [
@@ -83,15 +306,13 @@ class MutationBuilder
                     'firstName' => false,
                     'lastName' => false,
                     'fullName' => false,
-                    'biography' => false
                 ],
-                'returnValue' => 'contributionId'
+                'returnValue' => 'contributionId',
             ],
             'deleteContribution' => [
-                'fields' => [
-                    'contributionId' => false,
-                ],
-                'returnValue' => 'contributionId'
+                'fields' => ['contributionId' => false],
+                'nested' => false,
+                'returnValue' => 'contributionId',
             ],
             'createContributor' => [
                 'fields' => [
@@ -99,9 +320,9 @@ class MutationBuilder
                     'lastName' => false,
                     'fullName' => false,
                     'orcid' => false,
-                    'website' => false
+                    'website' => false,
                 ],
-                'returnValue' => 'contributorId'
+                'returnValue' => 'contributorId',
             ],
             'updateContributor' => [
                 'fields' => [
@@ -110,15 +331,48 @@ class MutationBuilder
                     'lastName' => false,
                     'fullName' => false,
                     'orcid' => false,
-                    'website' => false
+                    'website' => false,
                 ],
-                'returnValue' => 'contributorId'
+                'returnValue' => 'contributorId',
             ],
             'deleteContributor' => [
+                'fields' => ['contributorId' => false],
+                'nested' => false,
+                'returnValue' => 'contributorId',
+            ],
+            'createEndorsement' => [
                 'fields' => [
-                    'contributorId' => false,
+                    'workId' => false,
+                    'authorName' => false,
+                    'authorRole' => false,
+                    'authorOrcid' => false,
+                    'authorInstitutionId' => false,
+                    'url' => false,
+                    'text' => false,
+                    'endorsementOrdinal' => false,
                 ],
-                'returnValue' => 'contributorId'
+                'extraArgs' => $markupArg,
+                'returnValue' => 'endorsementId',
+            ],
+            'updateEndorsement' => [
+                'fields' => [
+                    'endorsementId' => false,
+                    'workId' => false,
+                    'authorName' => false,
+                    'authorRole' => false,
+                    'authorOrcid' => false,
+                    'authorInstitutionId' => false,
+                    'url' => false,
+                    'text' => false,
+                    'endorsementOrdinal' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'endorsementId',
+            ],
+            'deleteEndorsement' => [
+                'fields' => ['endorsementId' => false],
+                'nested' => false,
+                'returnValue' => 'endorsementId',
             ],
             'createFunding' => [
                 'fields' => [
@@ -128,9 +382,8 @@ class MutationBuilder
                     'projectName' => false,
                     'projectShortname' => false,
                     'grantNumber' => false,
-                    'jurisdiction' => false
                 ],
-                'returnValue' => 'fundingId'
+                'returnValue' => 'fundingId',
             ],
             'updateFunding' => [
                 'fields' => [
@@ -141,24 +394,28 @@ class MutationBuilder
                     'projectName' => false,
                     'projectShortname' => false,
                     'grantNumber' => false,
-                    'jurisdiction' => false
                 ],
-                'returnValue' => 'fundingId'
+                'returnValue' => 'fundingId',
             ],
             'deleteFunding' => [
-                'fields' => [
-                    'fundingId' => false,
-                ],
-                'returnValue' => 'fundingId'
+                'fields' => ['fundingId' => false],
+                'nested' => false,
+                'returnValue' => 'fundingId',
             ],
             'createImprint' => [
                 'fields' => [
                     'publisherId' => false,
                     'imprintName' => false,
                     'imprintUrl' => false,
-                    'crossmarkDoi' => false
+                    'crossmarkDoi' => false,
+                    's3Bucket' => false,
+                    'cdnDomain' => false,
+                    'cloudfrontDistId' => false,
+                    'defaultCurrency' => true,
+                    'defaultPlace' => false,
+                    'defaultLocale' => true,
                 ],
-                'returnValue' => 'imprintId'
+                'returnValue' => 'imprintId',
             ],
             'updateImprint' => [
                 'fields' => [
@@ -166,24 +423,29 @@ class MutationBuilder
                     'publisherId' => false,
                     'imprintName' => false,
                     'imprintUrl' => false,
-                    'crossmarkDoi' => false
+                    'crossmarkDoi' => false,
+                    's3Bucket' => false,
+                    'cdnDomain' => false,
+                    'cloudfrontDistId' => false,
+                    'defaultCurrency' => true,
+                    'defaultPlace' => false,
+                    'defaultLocale' => true,
                 ],
-                'returnValue' => 'imprintId'
+                'returnValue' => 'imprintId',
             ],
             'deleteImprint' => [
-                'fields' => [
-                    'imprintId' => false,
-                ],
-                'returnValue' => 'imprintId'
+                'fields' => ['imprintId' => false],
+                'nested' => false,
+                'returnValue' => 'imprintId',
             ],
             'createInstitution' => [
                 'fields' => [
                     'institutionName' => false,
                     'institutionDoi' => false,
                     'countryCode' => true,
-                    'ror' => false
+                    'ror' => false,
                 ],
-                'returnValue' => 'institutionId'
+                'returnValue' => 'institutionId',
             ],
             'updateInstitution' => [
                 'fields' => [
@@ -191,47 +453,46 @@ class MutationBuilder
                     'institutionName' => false,
                     'institutionDoi' => false,
                     'countryCode' => true,
-                    'ror' => false
+                    'ror' => false,
                 ],
-                'returnValue' => 'institutionId'
+                'returnValue' => 'institutionId',
             ],
             'deleteInstitution' => [
-                'fields' => [
-                    'institutionId' => false,
-                ],
-                'returnValue' => 'institutionId'
+                'fields' => ['institutionId' => false],
+                'nested' => false,
+                'returnValue' => 'institutionId',
             ],
             'createIssue' => [
                 'fields' => [
                     'seriesId' => false,
                     'workId' => false,
-                    'issueOrdinal' => false
+                    'issueOrdinal' => false,
+                    'issueNumber' => false,
                 ],
-                'returnValue' => 'issueId'
+                'returnValue' => 'issueId',
             ],
             'updateIssue' => [
                 'fields' => [
                     'issueId' => false,
                     'seriesId' => false,
                     'workId' => false,
-                    'issueOrdinal' => false
+                    'issueOrdinal' => false,
+                    'issueNumber' => false,
                 ],
-                'returnValue' => 'issueId'
+                'returnValue' => 'issueId',
             ],
             'deleteIssue' => [
-                'fields' => [
-                    'issueId' => false,
-                ],
-                'returnValue' => 'issueId'
+                'fields' => ['issueId' => false],
+                'nested' => false,
+                'returnValue' => 'issueId',
             ],
             'createLanguage' => [
                 'fields' => [
                     'workId' => false,
                     'languageCode' => true,
                     'languageRelation' => true,
-                    'mainLanguage' => false
                 ],
-                'returnValue' => 'languageId'
+                'returnValue' => 'languageId',
             ],
             'updateLanguage' => [
                 'fields' => [
@@ -239,15 +500,13 @@ class MutationBuilder
                     'workId' => false,
                     'languageCode' => true,
                     'languageRelation' => true,
-                    'mainLanguage' => false
                 ],
-                'returnValue' => 'languageId'
+                'returnValue' => 'languageId',
             ],
             'deleteLanguage' => [
-                'fields' => [
-                    'languageId' => false,
-                ],
-                'returnValue' => 'languageId'
+                'fields' => ['languageId' => false],
+                'nested' => false,
+                'returnValue' => 'languageId',
             ],
             'createLocation' => [
                 'fields' => [
@@ -255,9 +514,9 @@ class MutationBuilder
                     'locationPlatform' => true,
                     'canonical' => false,
                     'landingPage' => false,
-                    'fullTextUrl' => false
+                    'fullTextUrl' => false,
                 ],
-                'returnValue' => 'locationId'
+                'returnValue' => 'locationId',
             ],
             'updateLocation' => [
                 'fields' => [
@@ -266,38 +525,36 @@ class MutationBuilder
                     'locationPlatform' => true,
                     'canonical' => false,
                     'landingPage' => false,
-                    'fullTextUrl' => false
+                    'fullTextUrl' => false,
                 ],
-                'returnValue' => 'locationId'
+                'returnValue' => 'locationId',
             ],
             'deleteLocation' => [
-                'fields' => [
-                    'locationId' => false,
-                ],
-                'returnValue' => 'locationId'
+                'fields' => ['locationId' => false],
+                'nested' => false,
+                'returnValue' => 'locationId',
             ],
             'createPrice' => [
                 'fields' => [
                     'publicationId' => false,
                     'currencyCode' => true,
-                    'unitPrice' => false
+                    'unitPrice' => false,
                 ],
-                'returnValue' => 'priceId'
+                'returnValue' => 'priceId',
             ],
             'updatePrice' => [
                 'fields' => [
                     'priceId' => false,
                     'publicationId' => false,
                     'currencyCode' => true,
-                    'unitPrice' => false
+                    'unitPrice' => false,
                 ],
-                'returnValue' => 'priceId'
+                'returnValue' => 'priceId',
             ],
             'deletePrice' => [
-                'fields' => [
-                    'priceId' => false,
-                ],
-                'returnValue' => 'priceId'
+                'fields' => ['priceId' => false],
+                'nested' => false,
+                'returnValue' => 'priceId',
             ],
             'createPublication' => [
                 'fields' => [
@@ -311,9 +568,13 @@ class MutationBuilder
                     'heightIn' => false,
                     'weightG' => false,
                     'weightOz' => false,
-                    'isbn' => false
+                    'isbn' => false,
+                    'accessibilityStandard' => true,
+                    'accessibilityAdditionalStandard' => true,
+                    'accessibilityException' => true,
+                    'accessibilityReportUrl' => false,
                 ],
-                'returnValue' => 'publicationId'
+                'returnValue' => 'publicationId',
             ],
             'updatePublication' => [
                 'fields' => [
@@ -328,38 +589,44 @@ class MutationBuilder
                     'heightIn' => false,
                     'weightG' => false,
                     'weightOz' => false,
-                    'isbn' => false
+                    'isbn' => false,
+                    'accessibilityStandard' => true,
+                    'accessibilityAdditionalStandard' => true,
+                    'accessibilityException' => true,
+                    'accessibilityReportUrl' => false,
                 ],
-                'returnValue' => 'publicationId'
+                'returnValue' => 'publicationId',
             ],
             'deletePublication' => [
-                'fields' => [
-                    'publicationId' => false,
-                ],
-                'returnValue' => 'publicationId'
+                'fields' => ['publicationId' => false],
+                'nested' => false,
+                'returnValue' => 'publicationId',
             ],
             'createPublisher' => [
                 'fields' => [
                     'publisherName' => false,
                     'publisherShortname' => false,
-                    'publisherUrl' => false
+                    'publisherUrl' => false,
+                    'accessibilityStatement' => false,
+                    'accessibilityReportUrl' => false,
                 ],
-                'returnValue' => 'publisherId'
+                'returnValue' => 'publisherId',
             ],
             'updatePublisher' => [
                 'fields' => [
                     'publisherId' => false,
                     'publisherName' => false,
                     'publisherShortname' => false,
-                    'publisherUrl' => false
+                    'publisherUrl' => false,
+                    'accessibilityStatement' => false,
+                    'accessibilityReportUrl' => false,
                 ],
-                'returnValue' => 'publisherId'
+                'returnValue' => 'publisherId',
             ],
             'deletePublisher' => [
-                'fields' => [
-                    'publisherId' => false,
-                ],
-                'returnValue' => 'publisherId'
+                'fields' => ['publisherId' => false],
+                'nested' => false,
+                'returnValue' => 'publisherId',
             ],
             'createReference' => [
                 'fields' => [
@@ -384,9 +651,9 @@ class MutationBuilder
                     'standardsBodyAcronym' => false,
                     'url' => false,
                     'publicationDate' => false,
-                    'retrievalDate' => false
+                    'retrievalDate' => false,
                 ],
-                'returnValue' => 'referenceId'
+                'returnValue' => 'referenceId',
             ],
             'updateReference' => [
                 'fields' => [
@@ -412,15 +679,14 @@ class MutationBuilder
                     'standardsBodyAcronym' => false,
                     'url' => false,
                     'publicationDate' => false,
-                    'retrievalDate' => false
+                    'retrievalDate' => false,
                 ],
-                'returnValue' => 'referenceId'
+                'returnValue' => 'referenceId',
             ],
             'deleteReference' => [
-                'fields' => [
-                    'referenceId' => false,
-                ],
-                'returnValue' => 'referenceId'
+                'fields' => ['referenceId' => false],
+                'nested' => false,
+                'returnValue' => 'referenceId',
             ],
             'createSeries' => [
                 'fields' => [
@@ -431,9 +697,9 @@ class MutationBuilder
                     'issnDigital' => false,
                     'seriesUrl' => false,
                     'seriesDescription' => false,
-                    'seriesCfpUrl' => false
+                    'seriesCfpUrl' => false,
                 ],
-                'returnValue' => 'seriesId'
+                'returnValue' => 'seriesId',
             ],
             'updateSeries' => [
                 'fields' => [
@@ -445,24 +711,23 @@ class MutationBuilder
                     'issnDigital' => false,
                     'seriesUrl' => false,
                     'seriesDescription' => false,
-                    'seriesCfpUrl' => false
+                    'seriesCfpUrl' => false,
                 ],
-                'returnValue' => 'seriesId'
+                'returnValue' => 'seriesId',
             ],
             'deleteSeries' => [
-                'fields' => [
-                    'seriesId' => false,
-                ],
-                'returnValue' => 'seriesId'
+                'fields' => ['seriesId' => false],
+                'nested' => false,
+                'returnValue' => 'seriesId',
             ],
             'createSubject' => [
                 'fields' => [
                     'workId' => false,
                     'subjectType' => true,
                     'subjectCode' => false,
-                    'subjectOrdinal' => false
+                    'subjectOrdinal' => false,
                 ],
-                'returnValue' => 'subjectId'
+                'returnValue' => 'subjectId',
             ],
             'updateSubject' => [
                 'fields' => [
@@ -470,23 +735,49 @@ class MutationBuilder
                     'workId' => false,
                     'subjectType' => true,
                     'subjectCode' => false,
-                    'subjectOrdinal' => false
+                    'subjectOrdinal' => false,
                 ],
-                'returnValue' => 'subjectId'
+                'returnValue' => 'subjectId',
             ],
             'deleteSubject' => [
+                'fields' => ['subjectId' => false],
+                'nested' => false,
+                'returnValue' => 'subjectId',
+            ],
+            'createTitle' => [
                 'fields' => [
-                    'subjectId' => false,
+                    'workId' => false,
+                    'localeCode' => true,
+                    'fullTitle' => false,
+                    'title' => false,
+                    'subtitle' => false,
+                    'canonical' => false,
                 ],
-                'returnValue' => 'subjectId'
+                'extraArgs' => $markupArg,
+                'returnValue' => 'titleId',
+            ],
+            'updateTitle' => [
+                'fields' => [
+                    'titleId' => false,
+                    'workId' => false,
+                    'localeCode' => true,
+                    'fullTitle' => false,
+                    'title' => false,
+                    'subtitle' => false,
+                    'canonical' => false,
+                ],
+                'extraArgs' => $markupArg,
+                'returnValue' => 'titleId',
+            ],
+            'deleteTitle' => [
+                'fields' => ['titleId' => false],
+                'nested' => false,
+                'returnValue' => 'titleId',
             ],
             'createWork' => [
                 'fields' => [
                     'workType' => true,
                     'workStatus' => true,
-                    'fullTitle' => false,
-                    'title' => false,
-                    'subtitle' => false,
                     'reference' => false,
                     'edition' => false,
                     'imprintId' => false,
@@ -505,27 +796,23 @@ class MutationBuilder
                     'landingPage' => false,
                     'lccn' => false,
                     'oclc' => false,
-                    'shortAbstract' => false,
-                    'longAbstract' => false,
                     'generalNote' => false,
                     'bibliographyNote' => false,
                     'toc' => false,
+                    'resourcesDescription' => false,
                     'coverUrl' => false,
                     'coverCaption' => false,
                     'firstPage' => false,
                     'lastPage' => false,
-                    'pageInterval' => false
+                    'pageInterval' => false,
                 ],
-                'returnValue' => 'workId'
+                'returnValue' => 'workId',
             ],
             'updateWork' => [
                 'fields' => [
                     'workId' => false,
                     'workType' => true,
                     'workStatus' => true,
-                    'fullTitle' => false,
-                    'title' => false,
-                    'subtitle' => false,
                     'reference' => false,
                     'edition' => false,
                     'imprintId' => false,
@@ -544,33 +831,57 @@ class MutationBuilder
                     'landingPage' => false,
                     'lccn' => false,
                     'oclc' => false,
-                    'shortAbstract' => false,
-                    'longAbstract' => false,
                     'generalNote' => false,
                     'bibliographyNote' => false,
                     'toc' => false,
+                    'resourcesDescription' => false,
                     'coverUrl' => false,
                     'coverCaption' => false,
                     'firstPage' => false,
                     'lastPage' => false,
-                    'pageInterval' => false
+                    'pageInterval' => false,
                 ],
-                'returnValue' => 'workId'
+                'returnValue' => 'workId',
             ],
             'deleteWork' => [
+                'fields' => ['workId' => false],
+                'nested' => false,
+                'returnValue' => 'workId',
+            ],
+            'createWorkFeaturedVideo' => [
                 'fields' => [
                     'workId' => false,
+                    'title' => false,
+                    'url' => false,
+                    'width' => false,
+                    'height' => false,
                 ],
-                'returnValue' => 'workId'
+                'returnValue' => 'workFeaturedVideoId',
+            ],
+            'updateWorkFeaturedVideo' => [
+                'fields' => [
+                    'workFeaturedVideoId' => false,
+                    'workId' => false,
+                    'title' => false,
+                    'url' => false,
+                    'width' => false,
+                    'height' => false,
+                ],
+                'returnValue' => 'workFeaturedVideoId',
+            ],
+            'deleteWorkFeaturedVideo' => [
+                'fields' => ['workFeaturedVideoId' => false],
+                'nested' => false,
+                'returnValue' => 'workFeaturedVideoId',
             ],
             'createWorkRelation' => [
                 'fields' => [
                     'relatorWorkId' => false,
                     'relatedWorkId' => false,
                     'relationType' => true,
-                    'relationOrdinal' => false
+                    'relationOrdinal' => false,
                 ],
-                'returnValue' => 'workRelationId'
+                'returnValue' => 'workRelationId',
             ],
             'updateWorkRelation' => [
                 'fields' => [
@@ -578,16 +889,85 @@ class MutationBuilder
                     'relatorWorkId' => false,
                     'relatedWorkId' => false,
                     'relationType' => true,
-                    'relationOrdinal' => false
+                    'relationOrdinal' => false,
                 ],
-                'returnValue' => 'workRelationId'
+                'returnValue' => 'workRelationId',
             ],
             'deleteWorkRelation' => [
-                'fields' => [
-                    'workRelationId' => false,
-                ],
-                'returnValue' => 'workRelationId'
-            ]
+                'fields' => ['workRelationId' => false],
+                'nested' => false,
+                'returnValue' => 'workRelationId',
+            ],
+            'moveAffiliation' => [
+                'fields' => ['affiliationId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'affiliationId',
+            ],
+            'moveContribution' => [
+                'fields' => ['contributionId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'contributionId',
+            ],
+            'moveIssue' => [
+                'fields' => ['issueId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'issueId',
+            ],
+            'moveReference' => [
+                'fields' => ['referenceId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'referenceId',
+            ],
+            'moveAdditionalResource' => [
+                'fields' => ['additionalResourceId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'workResourceId',
+            ],
+            'moveAward' => [
+                'fields' => ['awardId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'awardId',
+            ],
+            'moveEndorsement' => [
+                'fields' => ['endorsementId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'endorsementId',
+            ],
+            'moveBookReview' => [
+                'fields' => ['bookReviewId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'bookReviewId',
+            ],
+            'moveSubject' => [
+                'fields' => ['subjectId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'subjectId',
+            ],
+            'moveWorkRelation' => [
+                'fields' => ['workRelationId' => false, 'newOrdinal' => false],
+                'nested' => false,
+                'returnValue' => 'workRelationId',
+            ],
+            'initPublicationFileUpload' => [
+                'fields' => ['publicationId' => false] + $uploadFields,
+                'returnValue' => 'fileUploadId',
+            ],
+            'initFrontcoverFileUpload' => [
+                'fields' => ['workId' => false] + $uploadFields,
+                'returnValue' => 'fileUploadId',
+            ],
+            'initAdditionalResourceFileUpload' => [
+                'fields' => ['additionalResourceId' => false] + $uploadFields,
+                'returnValue' => 'fileUploadId',
+            ],
+            'initWorkFeaturedVideoFileUpload' => [
+                'fields' => ['workFeaturedVideoId' => false] + $uploadFields,
+                'returnValue' => 'fileUploadId',
+            ],
+            'completeFileUpload' => [
+                'fields' => ['fileUploadId' => false],
+                'returnValue' => 'fileId',
+            ],
         ];
 
         return $mapping[$mutationName] ?? null;

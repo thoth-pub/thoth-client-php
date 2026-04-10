@@ -88,6 +88,9 @@ final class PublisherQueryTest extends TestCase
             publisherName
             publisherShortname
             publisherUrl
+            zitadelId
+            accessibilityStatement
+            accessibilityReportUrl
         }
         GQL;
     }
