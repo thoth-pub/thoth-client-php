@@ -4,14 +4,14 @@ namespace ThothApi\GraphQL;
 
 use ThothApi\GraphQL\Queries\AbstractQuery;
 use ThothApi\GraphQL\Queries\AbstractTextQuery;
-use ThothApi\GraphQL\Queries\AffiliationQuery;
 use ThothApi\GraphQL\Queries\AdditionalResourceQuery;
+use ThothApi\GraphQL\Queries\AffiliationQuery;
 use ThothApi\GraphQL\Queries\AwardQuery;
 use ThothApi\GraphQL\Queries\BiographyQuery;
 use ThothApi\GraphQL\Queries\BookReviewQuery;
+use ThothApi\GraphQL\Queries\ContactQuery;
 use ThothApi\GraphQL\Queries\ContributionQuery;
 use ThothApi\GraphQL\Queries\ContributorQuery;
-use ThothApi\GraphQL\Queries\ContactQuery;
 use ThothApi\GraphQL\Queries\EndorsementQuery;
 use ThothApi\GraphQL\Queries\FileQuery;
 use ThothApi\GraphQL\Queries\FundingQuery;
@@ -28,8 +28,8 @@ use ThothApi\GraphQL\Queries\ReferenceQuery;
 use ThothApi\GraphQL\Queries\SeriesQuery;
 use ThothApi\GraphQL\Queries\SubjectQuery;
 use ThothApi\GraphQL\Queries\TitleQuery;
-use ThothApi\GraphQL\Queries\WorkQuery;
 use ThothApi\GraphQL\Queries\WorkFeaturedVideoQuery;
+use ThothApi\GraphQL\Queries\WorkQuery;
 
 class QueryProvider
 {
