@@ -211,6 +211,6 @@ Desarrollado por [Lepidus Tecnologia](https://github.com/lepidus).
 
 Licenciado bajo la Licencia Apache, Versión 2.0 - [Consulta el archivo de licencia.](/LICENSE)
 
-Copyright (c) 2024 Lepidus Tecnologia
+Copyright (c) 2024-2026 Lepidus Tecnologia
 
-Copyright (c) 2024 Thoth
+Copyright (c) 2024-2026 Thoth Open Metadata

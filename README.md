@@ -219,6 +219,6 @@ Developed by [Lepidus Tecnologia](https://github.com/lepidus).
 
 Licensed under the Apache License, Version 2.0 - [See the License file.](/LICENSE)
 
-Copyright (c) 2024 Lepidus Tecnologia
+Copyright (c) 2024-2026 Lepidus Tecnologia
 
-Copyright (c) 2024 Thoth
+Copyright (c) 2024-2026 Thoth Open Metadata
