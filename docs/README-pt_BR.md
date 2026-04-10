@@ -67,7 +67,7 @@ $works = $client->works([
 
 #### Mutações
 
-Para executar mutações, forneça ao cliente um token bearer válido da API Thoth.
+Para executar mutações, forneça ao cliente um personal access token válido.
 
 ```php
 $client->setToken($token);
