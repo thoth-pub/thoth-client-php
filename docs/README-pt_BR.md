@@ -67,10 +67,10 @@ $works = $client->works([
 
 #### Mutações
 
-Para executar mutações é necessário realizar a autenticação com as credenciais de uma conta Thoth.
+Para executar mutações, forneça ao cliente um token bearer válido da API Thoth.
 
 ```php
-$client->login($email, $password);
+$client->setToken($token);
 ```
 
 Mutações podem ser executadas fornecendo uma instância da classe modelo correspondente ao tipo da mutação. Para mutações de exclusão, é necessário apenas fornecer o ID do objeto. Quando a operação é bem-sucedida, o ID do objeto é retornado.

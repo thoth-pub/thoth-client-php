@@ -55,17 +55,6 @@ class Client
         return $this;
     }
 
-    public function login(string $email, string $password): self
-    {
-        $this->token = (new Account($this->request))->login($email, $password);
-        return $this;
-    }
-
-    public function accountDetails(): array
-    {
-        return (new Account($this->request))->details($this->token);
-    }
-
     public function additionalResource(string $additionalResourceId): AdditionalResource
     {
         return $this->get('additionalResource', $additionalResourceId);
