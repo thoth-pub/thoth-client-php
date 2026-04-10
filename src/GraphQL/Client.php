@@ -106,12 +106,16 @@ class Client
 
     private function getIdentifierField(string $entityName): string
     {
-        return match ($entityName) {
-            'additionalResource' => 'additionalResourceId',
-            'bookReview' => 'bookReviewId',
-            'workFeaturedVideo' => 'workFeaturedVideoId',
-            default => $entityName . 'Id',
-        };
+        switch ($entityName) {
+            case 'additionalResource':
+                return 'additionalResourceId';
+            case 'bookReview':
+                return 'bookReviewId';
+            case 'workFeaturedVideo':
+                return 'workFeaturedVideoId';
+            default:
+                return $entityName . 'Id';
+        }
     }
 
     private function query(string $queryName, array $args = [], ?string $token = null): array

@@ -4,7 +4,7 @@ namespace ThothApi\GraphQL;
 
 class MutationBuilder
 {
-    public static function build(string $mutationName, array $mutationData, array|bool $extraArgs = []): string
+    public static function build(string $mutationName, array $mutationData, $extraArgs = []): string
     {
         $nestedOverride = null;
         if (is_bool($extraArgs)) {
