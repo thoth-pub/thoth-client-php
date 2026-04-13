@@ -67,10 +67,10 @@ $works = $client->works([
 
 #### Mutações
 
-Para executar mutações é necessário realizar a autenticação com as credenciais de uma conta Thoth.
+Para executar mutações, forneça ao cliente um personal access token válido.
 
 ```php
-$client->login($email, $password);
+$client->setToken($token);
 ```
 
 Mutações podem ser executadas fornecendo uma instância da classe modelo correspondente ao tipo da mutação. Para mutações de exclusão, é necessário apenas fornecer o ID do objeto. Quando a operação é bem-sucedida, o ID do objeto é retornado.
@@ -96,8 +96,7 @@ Uma exceção do tipo *QueryException* é lançada em caso de erro na solicitaç
 ```php
 try {
     $work = new \ThothApi\GraphQL\Models\Work([
-        'fullTitle' => 'Foo Bar',
-        'title' => 'Foo',
+        'doi' => 'https://doi.org/10.00000/00000000',
     ]);
     $workId = $client->createWork($work);
 } catch (\ThothApi\Exception\QueryException $exception) {
@@ -212,6 +211,6 @@ Desenvolvido por [Lepidus Tecnologia](https://github.com/lepidus).
 
 Licenciado sob a Licença Apache, Versão 2.0 - [Veja o arquivo de licença.](/LICENSE)
 
-Copyright (c) 2024 Lepidus Tecnologia
+Copyright (c) 2024-2026 Lepidus Tecnologia
 
-Copyright (c) 2024 Thoth
+Copyright (c) 2024-2026 Thoth Open Metadata

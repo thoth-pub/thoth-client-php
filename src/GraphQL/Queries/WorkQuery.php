@@ -86,9 +86,6 @@ class WorkQuery extends AbstractQuery
             imprintId
             workType
             workStatus
-            fullTitle
-            title
-            subtitle
             reference
             edition
             doi
@@ -106,16 +103,30 @@ class WorkQuery extends AbstractQuery
             landingPage
             lccn
             oclc
-            shortAbstract
-            longAbstract
             generalNote
             bibliographyNote
             toc
+            resourcesDescription
             coverUrl
             coverCaption
             firstPage
             lastPage
             pageInterval
+            titles {
+                titleId
+                localeCode
+                fullTitle
+                title
+                subtitle
+                canonical
+            }
+            abstracts {
+                abstractId
+                localeCode
+                content
+                canonical
+                abstractType
+            }
         }
         GQL;
     }

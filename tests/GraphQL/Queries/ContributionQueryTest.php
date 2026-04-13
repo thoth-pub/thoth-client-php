@@ -83,11 +83,16 @@ final class ContributionQueryTest extends TestCase
             workId
             contributionType
             mainContribution
-            biography
             firstName
             lastName
             fullName
             contributionOrdinal
+            biographies {
+                biographyId
+                localeCode
+                content
+                canonical
+            }
         }
         GQL;
     }

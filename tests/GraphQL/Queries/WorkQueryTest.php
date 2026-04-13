@@ -108,9 +108,6 @@ final class WorkQueryTest extends TestCase
             imprintId
             workType
             workStatus
-            fullTitle
-            title
-            subtitle
             reference
             edition
             doi
@@ -128,16 +125,30 @@ final class WorkQueryTest extends TestCase
             landingPage
             lccn
             oclc
-            shortAbstract
-            longAbstract
             generalNote
             bibliographyNote
             toc
+            resourcesDescription
             coverUrl
             coverCaption
             firstPage
             lastPage
             pageInterval
+            titles {
+                titleId
+                localeCode
+                fullTitle
+                title
+                subtitle
+                canonical
+            }
+            abstracts {
+                abstractId
+                localeCode
+                content
+                canonical
+                abstractType
+            }
         }
         GQL;
     }

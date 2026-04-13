@@ -90,7 +90,6 @@ final class LanguageQueryTest extends TestCase
             workId
             languageCode
             languageRelation
-            mainLanguage
         }
         GQL;
     }

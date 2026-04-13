@@ -18,8 +18,8 @@ final class SeriesQueryTest extends TestCase
     {
         $fragment = $this->getFieldsFragment();
         $expectedQuery = <<<GQL
-        query(\$series: Uuid!) {
-            series(seriesId: \$series) {
+        query(\$seriesId: Uuid!) {
+            series(seriesId: \$seriesId) {
                 ...seriesFields
             }
         }

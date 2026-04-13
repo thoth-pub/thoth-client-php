@@ -70,6 +70,12 @@ class ImprintQuery extends AbstractQuery
             imprintName
             imprintUrl
             crossmarkDoi
+            s3Bucket
+            cdnDomain
+            cloudfrontDistId
+            defaultCurrency
+            defaultPlace
+            defaultLocale
         }
         GQL;
     }

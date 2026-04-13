@@ -2,15 +2,15 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LanguageQuery extends AbstractQuery
+class AwardQuery extends AbstractQuery
 {
     public function getQuery(): string
     {
         return $this->buildQuery(
             <<<GQL
-            query (\$languageId: Uuid!) {
-                language(languageId: \$languageId) {
-                    ...languageFields
+            query(\$awardId: Uuid!) {
+                award(awardId: \$awardId) {
+                    ...awardFields
                 }
             }
             GQL
@@ -22,17 +22,13 @@ class LanguageQuery extends AbstractQuery
         return $this->buildQuery(
             <<<GQL
             query(
-                \$languageCodes: [LanguageCode!] = []
-                \$languageRelations: [LanguageRelation!] = []
                 \$limit: Int = 100
                 \$offset: Int = 0
-                \$field: LanguageField = LANGUAGE_CODE
+                \$field: AwardField = AWARD_ORDINAL
                 \$direction: Direction = ASC
                 \$publishers: [Uuid!] = []
             ) {
-                languages(
-                    languageCodes: \$languageCodes
-                    languageRelations: \$languageRelations
+                awards(
                     limit: \$limit
                     offset: \$offset
                     order: {
@@ -41,7 +37,7 @@ class LanguageQuery extends AbstractQuery
                     }
                     publishers: \$publishers
                 ) {
-                    ...languageFields
+                    ...awardFields
                 }
             }
             GQL
@@ -51,14 +47,8 @@ class LanguageQuery extends AbstractQuery
     public function getCountQuery(): string
     {
         return <<<GQL
-        query(
-            \$languageCodes: [LanguageCode!] = []
-            \$languageRelations: [LanguageRelation!] = []
-        ) {
-            languageCount(
-                languageCodes: \$languageCodes
-                languageRelations: \$languageRelations
-            )
+        query {
+            awardCount
         }
         GQL;
     }
@@ -66,11 +56,18 @@ class LanguageQuery extends AbstractQuery
     protected function getFieldsFragment(): string
     {
         return <<<GQL
-        fragment languageFields on Language {
-            languageId
+        fragment awardFields on Award {
+            awardId
             workId
-            languageCode
-            languageRelation
+            title
+            url
+            category
+            year
+            jury
+            country
+            role
+            prizeStatement
+            awardOrdinal
         }
         GQL;
     }
