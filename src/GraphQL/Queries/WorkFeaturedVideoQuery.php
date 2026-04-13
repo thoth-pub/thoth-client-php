@@ -2,15 +2,15 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LanguageQuery extends AbstractQuery
+class WorkFeaturedVideoQuery extends AbstractQuery
 {
     public function getQuery(): string
     {
         return $this->buildQuery(
             <<<GQL
-            query (\$languageId: Uuid!) {
-                language(languageId: \$languageId) {
-                    ...languageFields
+            query(\$workFeaturedVideoId: Uuid!) {
+                workFeaturedVideo(workFeaturedVideoId: \$workFeaturedVideoId) {
+                    ...workFeaturedVideoFields
                 }
             }
             GQL
@@ -22,17 +22,13 @@ class LanguageQuery extends AbstractQuery
         return $this->buildQuery(
             <<<GQL
             query(
-                \$languageCodes: [LanguageCode!] = []
-                \$languageRelations: [LanguageRelation!] = []
                 \$limit: Int = 100
                 \$offset: Int = 0
-                \$field: LanguageField = LANGUAGE_CODE
+                \$field: WorkFeaturedVideoField = UPDATED_AT
                 \$direction: Direction = ASC
                 \$publishers: [Uuid!] = []
             ) {
-                languages(
-                    languageCodes: \$languageCodes
-                    languageRelations: \$languageRelations
+                workFeaturedVideos(
                     limit: \$limit
                     offset: \$offset
                     order: {
@@ -41,7 +37,7 @@ class LanguageQuery extends AbstractQuery
                     }
                     publishers: \$publishers
                 ) {
-                    ...languageFields
+                    ...workFeaturedVideoFields
                 }
             }
             GQL
@@ -51,14 +47,8 @@ class LanguageQuery extends AbstractQuery
     public function getCountQuery(): string
     {
         return <<<GQL
-        query(
-            \$languageCodes: [LanguageCode!] = []
-            \$languageRelations: [LanguageRelation!] = []
-        ) {
-            languageCount(
-                languageCodes: \$languageCodes
-                languageRelations: \$languageRelations
-            )
+        query {
+            workFeaturedVideoCount
         }
         GQL;
     }
@@ -66,11 +56,13 @@ class LanguageQuery extends AbstractQuery
     protected function getFieldsFragment(): string
     {
         return <<<GQL
-        fragment languageFields on Language {
-            languageId
+        fragment workFeaturedVideoFields on WorkFeaturedVideo {
+            workFeaturedVideoId
             workId
-            languageCode
-            languageRelation
+            title
+            url
+            width
+            height
         }
         GQL;
     }

@@ -26,12 +26,12 @@ class Publisher extends AbstractModel
 
     public function getPublisherShortName(): ?string
     {
-        return $this->getData('publisherShortName');
+        return $this->getData('publisherShortname');
     }
 
     public function setPublisherShortName(?string $publisherShortName): void
     {
-        $this->setData('publisherShortName', $publisherShortName);
+        $this->setData('publisherShortname', $publisherShortName);
     }
 
     public function getPublisherUrl(): ?string

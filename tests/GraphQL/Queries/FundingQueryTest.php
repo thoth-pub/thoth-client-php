@@ -83,7 +83,6 @@ final class FundingQueryTest extends TestCase
             projectName
             projectShortname
             grantNumber
-            jurisdiction
         }
         GQL;
     }

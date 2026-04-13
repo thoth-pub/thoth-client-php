@@ -2,15 +2,15 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LanguageQuery extends AbstractQuery
+class EndorsementQuery extends AbstractQuery
 {
     public function getQuery(): string
     {
         return $this->buildQuery(
             <<<GQL
-            query (\$languageId: Uuid!) {
-                language(languageId: \$languageId) {
-                    ...languageFields
+            query(\$endorsementId: Uuid!) {
+                endorsement(endorsementId: \$endorsementId) {
+                    ...endorsementFields
                 }
             }
             GQL
@@ -22,17 +22,13 @@ class LanguageQuery extends AbstractQuery
         return $this->buildQuery(
             <<<GQL
             query(
-                \$languageCodes: [LanguageCode!] = []
-                \$languageRelations: [LanguageRelation!] = []
                 \$limit: Int = 100
                 \$offset: Int = 0
-                \$field: LanguageField = LANGUAGE_CODE
+                \$field: EndorsementField = ENDORSEMENT_ORDINAL
                 \$direction: Direction = ASC
                 \$publishers: [Uuid!] = []
             ) {
-                languages(
-                    languageCodes: \$languageCodes
-                    languageRelations: \$languageRelations
+                endorsements(
                     limit: \$limit
                     offset: \$offset
                     order: {
@@ -41,7 +37,7 @@ class LanguageQuery extends AbstractQuery
                     }
                     publishers: \$publishers
                 ) {
-                    ...languageFields
+                    ...endorsementFields
                 }
             }
             GQL
@@ -51,14 +47,8 @@ class LanguageQuery extends AbstractQuery
     public function getCountQuery(): string
     {
         return <<<GQL
-        query(
-            \$languageCodes: [LanguageCode!] = []
-            \$languageRelations: [LanguageRelation!] = []
-        ) {
-            languageCount(
-                languageCodes: \$languageCodes
-                languageRelations: \$languageRelations
-            )
+        query {
+            endorsementCount
         }
         GQL;
     }
@@ -66,11 +56,16 @@ class LanguageQuery extends AbstractQuery
     protected function getFieldsFragment(): string
     {
         return <<<GQL
-        fragment languageFields on Language {
-            languageId
+        fragment endorsementFields on Endorsement {
+            endorsementId
             workId
-            languageCode
-            languageRelation
+            authorName
+            authorRole
+            authorOrcid
+            authorInstitutionId
+            url
+            text
+            endorsementOrdinal
         }
         GQL;
     }

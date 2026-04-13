@@ -89,6 +89,12 @@ final class ImprintQueryTest extends TestCase
             imprintName
             imprintUrl
             crossmarkDoi
+            s3Bucket
+            cdnDomain
+            cloudfrontDistId
+            defaultCurrency
+            defaultPlace
+            defaultLocale
         }
         GQL;
     }

@@ -109,8 +109,7 @@ final class MutationBuilderTest extends TestCase
             'contributionOrdinal: 1, ' .
             'firstName: "John", ' .
             'lastName: "Doe", ' .
-            'fullName: "John Doe", ' .
-            'biography: "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae."';
+            'fullName: "John Doe"';
         $returnValue = 'contributionId';
 
         $expectedMutation = <<<GQL
@@ -132,7 +131,6 @@ final class MutationBuilderTest extends TestCase
             'firstName' => 'John',
             'lastName' => 'Doe',
             'fullName' => 'John Doe',
-            'biography' => 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.',
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -149,8 +147,7 @@ final class MutationBuilderTest extends TestCase
             'contributionOrdinal: 1, ' .
             'firstName: "John", ' .
             'lastName: "Doe", ' .
-            'fullName: "John Doe", ' .
-            'biography: "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae."';
+            'fullName: "John Doe"';
         $returnValue = 'contributionId';
 
         $expectedMutation = <<<GQL
@@ -173,7 +170,6 @@ final class MutationBuilderTest extends TestCase
             'firstName' => 'John',
             'lastName' => 'Doe',
             'fullName' => 'John Doe',
-            'biography' => 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.',
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -301,8 +297,7 @@ final class MutationBuilderTest extends TestCase
             'program: "FSE", ' .
             'projectName: "Marine Renewable Energy as Alien", ' .
             'projectShortname: "Alien Energy", ' .
-            'grantNumber: "0602-02551B", ' .
-            'jurisdiction: "DK"';
+            'grantNumber: "0602-02551B"';
         $returnValue = 'fundingId';
 
         $expectedMutation = <<<GQL
@@ -322,7 +317,6 @@ final class MutationBuilderTest extends TestCase
             'projectName' => 'Marine Renewable Energy as Alien',
             'projectShortname' => 'Alien Energy',
             'grantNumber' => '0602-02551B',
-            'jurisdiction' => 'DK'
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -337,8 +331,7 @@ final class MutationBuilderTest extends TestCase
             'program: "FSE", ' .
             'projectName: "Marine Renewable Energy as Alien", ' .
             'projectShortname: "Alien Energy", ' .
-            'grantNumber: "0602-02551B", ' .
-            'jurisdiction: "DK"';
+            'grantNumber: "0602-02551B"';
         $returnValue = 'fundingId';
 
         $expectedMutation = <<<GQL
@@ -359,7 +352,6 @@ final class MutationBuilderTest extends TestCase
             'projectName' => 'Marine Renewable Energy as Alien',
             'projectShortname' => 'Alien Energy',
             'grantNumber' => '0602-02551B',
-            'jurisdiction' => 'DK'
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -646,8 +638,7 @@ final class MutationBuilderTest extends TestCase
         $mutationName = 'createLanguage';
         $data = 'workId: "dcff2c6a-a81d-4af5-a08b-cef22928911b", ' .
             'languageCode: AAR, ' .
-            'languageRelation: ORIGINAL, ' .
-            'mainLanguage: true';
+            'languageRelation: ORIGINAL';
         $returnValue = 'languageId';
 
         $expectedMutation = <<<GQL
@@ -664,7 +655,6 @@ final class MutationBuilderTest extends TestCase
             'workId' => 'dcff2c6a-a81d-4af5-a08b-cef22928911b',
             'languageCode' => 'AAR',
             'languageRelation' => 'ORIGINAL',
-            'mainLanguage' => true
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -676,8 +666,7 @@ final class MutationBuilderTest extends TestCase
         $data = 'languageId: "c5fe1926-d702-468b-b98e-984e1b49acf9", ' .
             'workId: "dcff2c6a-a81d-4af5-a08b-cef22928911b", ' .
             'languageCode: AAR, ' .
-            'languageRelation: ORIGINAL, ' .
-            'mainLanguage: true';
+            'languageRelation: ORIGINAL';
         $returnValue = 'languageId';
 
         $expectedMutation = <<<GQL
@@ -695,7 +684,6 @@ final class MutationBuilderTest extends TestCase
             'workId' => 'dcff2c6a-a81d-4af5-a08b-cef22928911b',
             'languageCode' => 'AAR',
             'languageRelation' => 'ORIGINAL',
-            'mainLanguage' => true
         ]);
 
         $this->assertSame($expectedMutation, $mutation);
@@ -1426,9 +1414,6 @@ final class MutationBuilderTest extends TestCase
         $mutationName = 'createWork';
         $data = 'workType: BOOK_CHAPTER, ' .
             'workStatus: FORTHCOMING, ' .
-            'fullTitle: "Lorem ipsum: Neque porro quisquam est", ' .
-            'title: "Lorem ipsum", ' .
-            'subtitle: "Neque porro quisquam est", ' .
             'reference: "foo", ' .
             'edition: 10, ' .
             'imprintId: "dd0410c9-d5f9-43c9-8289-adfd9fc8bded", ' .
@@ -1447,8 +1432,6 @@ final class MutationBuilderTest extends TestCase
             'landingPage: "https:\/\/foo.bar\/lorem-ipsum\/", ' .
             'lccn: "2014471418", ' .
             'oclc: "1086518639", ' .
-            'shortAbstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra ut finibus suscipit", ' .
-            'longAbstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra nulla ut finibus suscipit. Etiam dictum cursus dolor, in fringilla felis placerat sed. Fusce aliquam orci ut sapie lobortis, id cursus dolor dapibus. Nunc vitae ligula nec ex ornare pretium. Donec et purus ac ipsumfinibus faucibus. Fusce at ipsum velit.", ' .
             'generalNote: "Sed nunc dui, semper eu semper vel, bibendum in nulla.", ' .
             'bibliographyNote: "Phasellus ac gravida odio. Mauris nec sodales odio", ' .
             'toc: "0. Introduction\n1. Lorem ipsum dolor sit amet\n2. Nullam viverra ut finibus suscipit\n3. Etiam dictum cursus dolor\n4. Conclusions", ' .
@@ -1472,15 +1455,11 @@ final class MutationBuilderTest extends TestCase
         $mutation = MutationBuilder::build('createWork', [
             'workType' => 'BOOK_CHAPTER',
             'workStatus' => 'FORTHCOMING',
-            'fullTitle' => 'Lorem ipsum: Neque porro quisquam est',
-            'title' => 'Lorem ipsum',
             'imprintId' => 'dd0410c9-d5f9-43c9-8289-adfd9fc8bded',
             'withdrawnDate' => '2020-12-12',
             'videoCount' => 10,
             'toc' => "0. Introduction\n1. Lorem ipsum dolor sit amet\n2. Nullam viverra ut finibus suscipit\n3. Etiam dictum cursus dolor\n4. Conclusions",
             'tableCount' => 10,
-            'subtitle' => 'Neque porro quisquam est',
-            'shortAbstract' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra ut finibus suscipit',
             'reference' => 'foo',
             'publicationDate' => '2020-01-01',
             'place' => 'Earth, Milky Way',
@@ -1488,7 +1467,6 @@ final class MutationBuilderTest extends TestCase
             'pageCount' => 10,
             'pageBreakdown' => '0',
             'oclc' => '1086518639',
-            'longAbstract' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra nulla ut finibus suscipit. Etiam dictum cursus dolor, in fringilla felis placerat sed. Fusce aliquam orci ut sapie lobortis, id cursus dolor dapibus. Nunc vitae ligula nec ex ornare pretium. Donec et purus ac ipsumfinibus faucibus. Fusce at ipsum velit.',
             'license' => 'https://creativecommons.org/licenses/by-nc/4.0/',
             'lccn' => '2014471418',
             'lastPage' => '326',
@@ -1514,9 +1492,6 @@ final class MutationBuilderTest extends TestCase
         $data = 'workId: "de7387a8-dd91-44ec-87c5-f8dba3f82b99", ' .
             'workType: BOOK_CHAPTER, ' .
             'workStatus: FORTHCOMING, ' .
-            'fullTitle: "Lorem ipsum: Neque porro quisquam est", ' .
-            'title: "Lorem ipsum", ' .
-            'subtitle: "Neque porro quisquam est", ' .
             'reference: "foo", ' .
             'edition: 10, ' .
             'imprintId: "dd0410c9-d5f9-43c9-8289-adfd9fc8bded", ' .
@@ -1535,8 +1510,6 @@ final class MutationBuilderTest extends TestCase
             'landingPage: "https:\/\/foo.bar\/lorem-ipsum\/", ' .
             'lccn: "2014471418", ' .
             'oclc: "1086518639", ' .
-            'shortAbstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra ut finibus suscipit", ' .
-            'longAbstract: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra nulla ut finibus suscipit. Etiam dictum cursus dolor, in fringilla felis placerat sed. Fusce aliquam orci ut sapie lobortis, id cursus dolor dapibus. Nunc vitae ligula nec ex ornare pretium. Donec et purus ac ipsumfinibus faucibus. Fusce at ipsum velit.", ' .
             'generalNote: "Sed nunc dui, semper eu semper vel, bibendum in nulla.", ' .
             'bibliographyNote: "Phasellus ac gravida odio. Mauris nec sodales odio", ' .
             'toc: "0. Introduction\n1. Lorem ipsum dolor sit amet\n2. Nullam viverra ut finibus suscipit\n3. Etiam dictum cursus dolor\n4. Conclusions", ' .
@@ -1561,15 +1534,11 @@ final class MutationBuilderTest extends TestCase
             'workId' => 'de7387a8-dd91-44ec-87c5-f8dba3f82b99',
             'workType' => 'BOOK_CHAPTER',
             'workStatus' => 'FORTHCOMING',
-            'fullTitle' => 'Lorem ipsum: Neque porro quisquam est',
-            'title' => 'Lorem ipsum',
             'imprintId' => 'dd0410c9-d5f9-43c9-8289-adfd9fc8bded',
             'withdrawnDate' => '2020-12-12',
             'videoCount' => 10,
             'toc' => "0. Introduction\n1. Lorem ipsum dolor sit amet\n2. Nullam viverra ut finibus suscipit\n3. Etiam dictum cursus dolor\n4. Conclusions",
             'tableCount' => 10,
-            'subtitle' => 'Neque porro quisquam est',
-            'shortAbstract' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra ut finibus suscipit',
             'reference' => 'foo',
             'publicationDate' => '2020-01-01',
             'place' => 'Earth, Milky Way',
@@ -1577,7 +1546,6 @@ final class MutationBuilderTest extends TestCase
             'pageCount' => 10,
             'pageBreakdown' => '0',
             'oclc' => '1086518639',
-            'longAbstract' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam viverra nulla ut finibus suscipit. Etiam dictum cursus dolor, in fringilla felis placerat sed. Fusce aliquam orci ut sapie lobortis, id cursus dolor dapibus. Nunc vitae ligula nec ex ornare pretium. Donec et purus ac ipsumfinibus faucibus. Fusce at ipsum velit.',
             'license' => 'https://creativecommons.org/licenses/by-nc/4.0/',
             'lccn' => '2014471418',
             'lastPage' => '326',

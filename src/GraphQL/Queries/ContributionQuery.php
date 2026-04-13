@@ -64,11 +64,16 @@ class ContributionQuery extends AbstractQuery
             workId
             contributionType
             mainContribution
-            biography
             firstName
             lastName
             fullName
             contributionOrdinal
+            biographies {
+                biographyId
+                localeCode
+                content
+                canonical
+            }
         }
         GQL;
     }

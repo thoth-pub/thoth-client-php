@@ -80,6 +80,7 @@ final class IssueQueryTest extends TestCase
             workId
             seriesId
             issueOrdinal
+            issueNumber
         }
         GQL;
     }

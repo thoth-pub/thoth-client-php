@@ -69,6 +69,9 @@ class PublisherQuery extends AbstractQuery
             publisherName
             publisherShortname
             publisherUrl
+            zitadelId
+            accessibilityStatement
+            accessibilityReportUrl
         }
         GQL;
     }
