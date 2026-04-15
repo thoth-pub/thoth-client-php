@@ -29,6 +29,7 @@ use ThothApi\GraphQL\Models\Subject;
 use ThothApi\GraphQL\Models\Title;
 use ThothApi\GraphQL\Models\Work;
 use ThothApi\GraphQL\Models\WorkFeaturedVideo;
+use ThothApi\GraphQL\Queries\ImprintQuery;
 
 trait HasQueryOperations
 {
@@ -227,9 +228,15 @@ trait HasQueryOperations
         return $this->get('imprint', $imprintId);
     }
 
-    public function imprints(array $args = []): array
+    public function imprints(array $args = [], bool $includeRestrictedFields = false): array
     {
-        return $this->getMany('imprint', $args);
+        if (!$includeRestrictedFields) {
+            return $this->getMany('imprint', $args);
+        }
+
+        $query = (new ImprintQuery())->getManyQueryWithRestrictedFields(true);
+        $result = $this->runGraphqlQuery($query, array_filter($args, fn ($value) => $value !== null))->getData();
+        return array_map(fn ($data) => new Imprint($data), $result['imprints']);
     }
 
     public function imprintCount(array $args = []): int

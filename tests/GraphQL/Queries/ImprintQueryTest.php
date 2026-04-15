@@ -16,7 +16,7 @@ final class ImprintQueryTest extends TestCase
 
     public function testGetImprintQuery(): void
     {
-        $fragment = $this->getFieldsFragment();
+        $fragment = $this->getFieldsFragment(true);
         $expectedQuery = <<<GQL
         query(\$imprintId: Uuid!) {
             imprint(imprintId: \$imprintId) {
@@ -32,7 +32,7 @@ final class ImprintQueryTest extends TestCase
 
     public function testGetImprintsQuery(): void
     {
-        $fragment = $this->getFieldsFragment();
+        $fragment = $this->getFieldsFragment(false);
         $expectedQuery = <<<GQL
         query(
             \$limit: Int = 100
@@ -62,6 +62,38 @@ final class ImprintQueryTest extends TestCase
         $this->assertSame($expectedQuery, $query);
     }
 
+    public function testGetImprintsQueryWithRestrictedFields(): void
+    {
+        $fragment = $this->getFieldsFragment(true);
+        $expectedQuery = <<<GQL
+        query(
+            \$limit: Int = 100
+            \$offset: Int = 0
+            \$filter: String = ""
+            \$field: ImprintField = IMPRINT_NAME
+            \$direction: Direction = ASC
+            \$publishers: [Uuid!] = []
+        ) {
+            imprints(
+                limit: \$limit
+                offset: \$offset
+                filter: \$filter
+                order: {
+                field: \$field
+                direction: \$direction
+                }
+                publishers: \$publishers
+            ) {
+                ...imprintFields
+            }
+        }
+        {$fragment}
+        GQL;
+
+        $query = $this->imprintQuery->getManyQueryWithRestrictedFields(true);
+        $this->assertSame($expectedQuery, $query);
+    }
+
     public function testGetImprintCountQuery(): void
     {
         $expectedQuery = <<<GQL
@@ -80,8 +112,14 @@ final class ImprintQueryTest extends TestCase
         $this->assertSame($expectedQuery, $query);
     }
 
-    public function getFieldsFragment(): string
+    public function getFieldsFragment(bool $includeRestrictedFields): string
     {
+        $restrictedFields = $includeRestrictedFields ? <<<GQL
+            s3Bucket
+            cdnDomain
+            cloudfrontDistId
+        GQL : '';
+
         return <<<GQL
         fragment imprintFields on Imprint {
             imprintId
@@ -89,9 +127,7 @@ final class ImprintQueryTest extends TestCase
             imprintName
             imprintUrl
             crossmarkDoi
-            s3Bucket
-            cdnDomain
-            cloudfrontDistId
+        {$restrictedFields}
             defaultCurrency
             defaultPlace
             defaultLocale

@@ -6,43 +6,50 @@ class ImprintQuery extends AbstractQuery
 {
     public function getQuery(): string
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$imprintId: Uuid!) {
-                imprint(imprintId: \$imprintId) {
+        return $this->buildQueryWithRestrictedFields(
+            <<<'GQL'
+            query($imprintId: Uuid!) {
+                imprint(imprintId: $imprintId) {
                     ...imprintFields
                 }
             }
-            GQL
+            GQL,
+            true
         );
     }
 
     public function getManyQuery(): string
     {
-        return $this->buildQuery(
-            <<<GQL
+        return $this->getManyQueryWithRestrictedFields(false);
+    }
+
+    public function getManyQueryWithRestrictedFields(bool $includeRestrictedFields = false): string
+    {
+        return $this->buildQueryWithRestrictedFields(
+            <<<'GQL'
             query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$filter: String = ""
-                \$field: ImprintField = IMPRINT_NAME
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
+                $limit: Int = 100
+                $offset: Int = 0
+                $filter: String = ""
+                $field: ImprintField = IMPRINT_NAME
+                $direction: Direction = ASC
+                $publishers: [Uuid!] = []
             ) {
                 imprints(
-                    limit: \$limit
-                    offset: \$offset
-                    filter: \$filter
+                    limit: $limit
+                    offset: $offset
+                    filter: $filter
                     order: {
-                    field: \$field
-                    direction: \$direction
+                    field: $field
+                    direction: $direction
                     }
-                    publishers: \$publishers
+                    publishers: $publishers
                 ) {
                     ...imprintFields
                 }
             }
-            GQL
+            GQL,
+            $includeRestrictedFields
         );
     }
 
@@ -63,6 +70,17 @@ class ImprintQuery extends AbstractQuery
 
     protected function getFieldsFragment(): string
     {
+        return $this->getFieldsFragmentWithRestrictedFields(true);
+    }
+
+    protected function getFieldsFragmentWithRestrictedFields(bool $includeRestrictedFields = false): string
+    {
+        $restrictedFields = $includeRestrictedFields ? <<<GQL
+            s3Bucket
+            cdnDomain
+            cloudfrontDistId
+        GQL : '';
+
         return <<<GQL
         fragment imprintFields on Imprint {
             imprintId
@@ -70,13 +88,20 @@ class ImprintQuery extends AbstractQuery
             imprintName
             imprintUrl
             crossmarkDoi
-            s3Bucket
-            cdnDomain
-            cloudfrontDistId
+        {$restrictedFields}
             defaultCurrency
             defaultPlace
             defaultLocale
         }
+        GQL;
+    }
+
+    private function buildQueryWithRestrictedFields(string $queryBody, bool $includeRestrictedFields): string
+    {
+        $fragment = $this->getFieldsFragmentWithRestrictedFields($includeRestrictedFields);
+        return <<<GQL
+        {$queryBody}
+        {$fragment}
         GQL;
     }
 }
