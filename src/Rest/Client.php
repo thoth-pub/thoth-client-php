@@ -10,6 +10,8 @@ class Client
 {
     public const THOTH_EXPORT_BASE_URI = 'https://export.thoth.pub/';
 
+    private HttpClient $httpClient;
+
     public function __construct(array $httpConfig = [])
     {
         if (!isset($httpConfig['base_uri'])) {
