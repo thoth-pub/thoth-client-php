@@ -2,67 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class IssueQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class IssueQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$issueId: Uuid!) {
-                issue(issueId: \$issueId) {
-                    ...issueFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'issue',
+            'description' => 'Query a single issue using its ID',
+            'args' => [
+                [
+                    'name' => 'issueId',
+                    'description' => 'Thoth issue ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Issue',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: IssueField = ISSUE_ORDINAL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                issues(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                    field: \$field
-                    direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...issueFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            issueCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment issueFields on Issue {
-            issueId
-            workId
-            seriesId
-            issueOrdinal
-            issueNumber
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

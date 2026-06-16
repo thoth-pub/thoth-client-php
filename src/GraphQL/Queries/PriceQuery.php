@@ -2,68 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class PriceQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class PriceQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$priceId: Uuid!) {
-                price(priceId: \$priceId) {
-                    ...priceFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'price',
+            'description' => 'Query a single price using its ID',
+            'args' => [
+                [
+                    'name' => 'priceId',
+                    'description' => 'Thoth price ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Price',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$currencyCodes: [CurrencyCode!] = []
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: PriceField = CURRENCY_CODE
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                prices(
-                    currencyCodes: \$currencyCodes
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...priceFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(\$currencyCodes: [CurrencyCode!] = []) {
-            priceCount(currencyCodes: \$currencyCodes)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment priceFields on Price {
-            priceId
-            publicationId
-            currencyCode
-            unitPrice
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

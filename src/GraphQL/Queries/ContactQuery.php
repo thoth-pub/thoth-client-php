@@ -2,68 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class ContactQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class ContactQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$contactId: Uuid!) {
-                contact(contactId: \$contactId) {
-                    ...contactFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'contact',
+            'description' => 'Query a single contact using its ID',
+            'args' => [
+                [
+                    'name' => 'contactId',
+                    'description' => 'Thoth contact ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Contact',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: ContactField = EMAIL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-                \$contactTypes: [ContactType!] = []
-            ) {
-                contacts(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                    contactTypes: \$contactTypes
-                ) {
-                    ...contactFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(\$contactTypes: [ContactType!] = []) {
-            contactCount(contactTypes: \$contactTypes)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment contactFields on Contact {
-            contactId
-            publisherId
-            contactType
-            email
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

@@ -2,85 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class ReferenceQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class ReferenceQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$referenceId: Uuid!) {
-                reference(referenceId: \$referenceId) {
-                    ...referenceFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'reference',
+            'description' => 'Query a single reference using its ID',
+            'args' => [
+                [
+                    'name' => 'referenceId',
+                    'description' => 'Thoth reference ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Reference',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: ReferenceField = REFERENCE_ORDINAL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                references (
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...referenceFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            referenceCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment referenceFields on Reference {
-            referenceId
-            workId
-            referenceOrdinal
-            doi
-            unstructuredCitation
-            issn
-            isbn
-            journalTitle
-            articleTitle
-            seriesTitle
-            volumeTitle
-            edition
-            author
-            volume
-            issue
-            firstPage
-            componentNumber
-            standardDesignator
-            standardsBodyName
-            standardsBodyAcronym
-            url
-            publicationDate
-            retrievalDate
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

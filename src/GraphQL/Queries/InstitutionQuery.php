@@ -2,69 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class InstitutionQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class InstitutionQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$institutionId: Uuid!) {
-                institution(institutionId: \$institutionId) {
-                    ...institutionFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'institution',
+            'description' => 'Query a single institution using its ID',
+            'args' => [
+                [
+                    'name' => 'institutionId',
+                    'description' => 'Thoth institution ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Institution',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$filter: String = ""
-                \$field:InstitutionField = INSTITUTION_NAME
-                \$direction: Direction = ASC
-            ) {
-                institutions (
-                    limit: \$limit
-                    offset: \$offset
-                    filter: \$filter
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                ) {
-                    ...institutionFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$filter: String = ""
-        ) {
-            institutionCount(filter: \$filter)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment institutionFields on Institution {
-            institutionId
-            institutionName
-            institutionDoi
-            countryCode
-            ror
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

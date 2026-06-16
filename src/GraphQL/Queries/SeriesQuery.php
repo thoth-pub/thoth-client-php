@@ -2,83 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class SeriesQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class SeriesQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$seriesId: Uuid!) {
-                series(seriesId: \$seriesId) {
-                    ...seriesFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'series',
+            'description' => 'Query a single series using its ID',
+            'args' => [
+                [
+                    'name' => 'seriesId',
+                    'description' => 'Thoth series ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Series',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$filter: String = ""
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field:SeriesField = SERIES_NAME
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-                \$seriesTypes: [SeriesType!] = []
-            ) {
-                serieses(
-                    filter: \$filter
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                    seriesTypes: \$seriesTypes
-                ) {
-                    ...seriesFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$filter: String = ""
-            \$publishers: [Uuid!] = []
-            \$seriesTypes: [SeriesType!] = []
-        ) {
-            seriesCount(
-                filter: \$filter
-                publishers: \$publishers
-                seriesTypes: \$seriesTypes
-            )
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment seriesFields on Series {
-            seriesId
-            seriesType
-            seriesName
-            issnPrint
-            issnDigital
-            seriesUrl
-            seriesDescription
-            seriesCfpUrl
-            imprintId
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

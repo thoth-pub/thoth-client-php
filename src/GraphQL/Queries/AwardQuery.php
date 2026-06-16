@@ -2,73 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class AwardQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class AwardQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$awardId: Uuid!) {
-                award(awardId: \$awardId) {
-                    ...awardFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'award',
+            'description' => 'Query a single award using its ID',
+            'args' => [
+                [
+                    'name' => 'awardId',
+                    'description' => 'Thoth award ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Award',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: AwardField = AWARD_ORDINAL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                awards(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...awardFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            awardCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment awardFields on Award {
-            awardId
-            workId
-            title
-            url
-            category
-            year
-            jury
-            country
-            role
-            prizeStatement
-            awardOrdinal
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

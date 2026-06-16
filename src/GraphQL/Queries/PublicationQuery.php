@@ -2,92 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class PublicationQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class PublicationQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$publicationId: Uuid!
-                \$lengthUnit: LengthUnit = MM
-                \$weightUnit: WeightUnit = G
-            ) {
-                publication(publicationId: \$publicationId) {
-                    ...publicationFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'publication',
+            'description' => 'Query a single publication using its ID',
+            'args' => [
+                [
+                    'name' => 'publicationId',
+                    'description' => 'Thoth publication ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Publication',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$filter: String = ""
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: PublicationField = PUBLICATION_TYPE
-                \$direction: Direction = ASC
-                \$publicationTypes: [PublicationType!] = []
-                \$publishers: [Uuid!] = []
-                \$lengthUnit: LengthUnit = MM
-                \$weightUnit: WeightUnit = G
-            ) {
-                publications(
-                    limit: \$limit
-                    filter: \$filter
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publicationTypes: \$publicationTypes
-                    publishers: \$publishers
-                ) {
-                    ...publicationFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$filter: String = ""
-            \$publicationTypes: [PublicationType!] = []
-            \$publishers: [Uuid!] = []
-        ) {
-            publicationCount(
-                filter: \$filter
-                publicationTypes: \$publicationTypes
-                publishers: \$publishers
-            )
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment publicationFields on Publication {
-            publicationId
-            publicationType
-            workId
-            isbn
-            width(units: \$lengthUnit)
-            height(units: \$lengthUnit)
-            depth(units: \$lengthUnit)
-            weight(units: \$weightUnit)
-            accessibilityStandard
-            accessibilityAdditionalStandard
-            accessibilityException
-            accessibilityReportUrl
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

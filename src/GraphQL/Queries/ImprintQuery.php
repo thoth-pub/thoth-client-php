@@ -2,106 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class ImprintQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class ImprintQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQueryWithRestrictedFields(
-            <<<'GQL'
-            query($imprintId: Uuid!) {
-                imprint(imprintId: $imprintId) {
-                    ...imprintFields
-                }
-            }
-            GQL,
-            true
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'imprint',
+            'description' => 'Query a single imprint using its ID',
+            'args' => [
+                [
+                    'name' => 'imprintId',
+                    'description' => 'Thoth imprint ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Imprint',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->getManyQueryWithRestrictedFields(false);
-    }
-
-    public function getManyQueryWithRestrictedFields(bool $includeRestrictedFields = false): string
-    {
-        return $this->buildQueryWithRestrictedFields(
-            <<<'GQL'
-            query(
-                $limit: Int = 100
-                $offset: Int = 0
-                $filter: String = ""
-                $field: ImprintField = IMPRINT_NAME
-                $direction: Direction = ASC
-                $publishers: [Uuid!] = []
-            ) {
-                imprints(
-                    limit: $limit
-                    offset: $offset
-                    filter: $filter
-                    order: {
-                    field: $field
-                    direction: $direction
-                    }
-                    publishers: $publishers
-                ) {
-                    ...imprintFields
-                }
-            }
-            GQL,
-            $includeRestrictedFields
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$filter: String = ""
-            \$publishers: [Uuid!] = []
-        ) {
-            imprintCount(
-                filter: \$filter
-                publishers: \$publishers
-            )
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return $this->getFieldsFragmentWithRestrictedFields(true);
-    }
-
-    protected function getFieldsFragmentWithRestrictedFields(bool $includeRestrictedFields = false): string
-    {
-        $restrictedFields = $includeRestrictedFields ? <<<GQL
-            s3Bucket
-            cdnDomain
-            cloudfrontDistId
-        GQL : '';
-
-        return <<<GQL
-        fragment imprintFields on Imprint {
-            imprintId
-            publisherId
-            imprintName
-            imprintUrl
-            crossmarkDoi
-        {$restrictedFields}
-            defaultCurrency
-            defaultPlace
-            defaultLocale
-        }
-        GQL;
-    }
-
-    private function buildQueryWithRestrictedFields(string $queryBody, bool $includeRestrictedFields): string
-    {
-        $fragment = $this->getFieldsFragmentWithRestrictedFields($includeRestrictedFields);
-        return <<<GQL
-        {$queryBody}
-        {$fragment}
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

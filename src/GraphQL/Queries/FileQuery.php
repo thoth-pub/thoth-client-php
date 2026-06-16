@@ -2,37 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class FileQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class FileQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$fileId: Uuid!) {
-                file(fileId: \$fileId) {
-                    ...fileFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'file',
+            'description' => 'Query a single file using its ID',
+            'args' => [
+                [
+                    'name' => 'fileId',
+                    'description' => 'Thoth file ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'File',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    protected function getFieldsFragment(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return <<<GQL
-        fragment fileFields on File {
-            fileId
-            fileType
-            workId
-            publicationId
-            additionalResourceId
-            workFeaturedVideoId
-            objectKey
-            cdnUrl
-            mimeType
-            bytes
-            sha256
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

@@ -2,67 +2,58 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class TitleQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class TitleQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$titleId: Uuid!
-                \$markupFormat: MarkupFormat
-            ) {
-                title(titleId: \$titleId, markupFormat: \$markupFormat) {
-                    ...titleFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'title',
+            'description' => 'Query a title by its ID',
+            'args' => [
+                [
+                    'name' => 'titleId',
+                    'description' => null,
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+                [
+                    'name' => 'markupFormat',
+                    'description' => null,
+                    'type' => [
+                        'kind' => 'ENUM',
+                        'name' => 'MarkupFormat',
+                        'ofType' => null,
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Title',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$filter: String = ""
-                \$field: TitleField = FULL_TITLE
-                \$direction: Direction = ASC
-                \$localeCodes: [LocaleCode!] = []
-                \$markupFormat: MarkupFormat
-            ) {
-                titles(
-                    limit: \$limit
-                    offset: \$offset
-                    filter: \$filter
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    localeCodes: \$localeCodes
-                    markupFormat: \$markupFormat
-                ) {
-                    ...titleFields
-                }
-            }
-            GQL
-        );
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment titleFields on Title {
-            titleId
-            workId
-            localeCode
-            fullTitle
-            title
-            subtitle
-            canonical
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

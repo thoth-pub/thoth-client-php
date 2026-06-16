@@ -66,4 +66,43 @@ class ResponseTest extends TestCase
         $this->expectException(QueryException::class);
         new Response($httpResponse);
     }
+
+    public function testThrowQueryExceptionWithAllErrorsAndStatusCode(): void
+    {
+        $errors = [
+            ['message' => 'first syntax error'],
+            ['message' => 'second syntax error'],
+        ];
+        $httpResponse = new HttpResponse(400, [], json_encode(['errors' => $errors]));
+
+        try {
+            new Response($httpResponse);
+            $this->fail('Expected query exception.');
+        } catch (QueryException $exception) {
+            $this->assertSame('first syntax error', $exception->getMessage());
+            $this->assertSame($errors[0], $exception->getDetails());
+            $this->assertSame($errors, $exception->getErrors());
+            $this->assertSame(400, $exception->getStatusCode());
+        }
+    }
+
+    public function testThrowQueryExceptionForInvalidJsonResponse(): void
+    {
+        $httpResponse = new HttpResponse(200, [], '{invalid');
+
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('Invalid JSON response from GraphQL API.');
+
+        new Response($httpResponse);
+    }
+
+    public function testThrowQueryExceptionWhenResponseHasNoData(): void
+    {
+        $httpResponse = new HttpResponse(200, [], json_encode(['status' => 'ok']));
+
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('GraphQL response does not contain data.');
+
+        new Response($httpResponse);
+    }
 }

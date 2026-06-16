@@ -2,76 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LanguageQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class LanguageQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query (\$languageId: Uuid!) {
-                language(languageId: \$languageId) {
-                    ...languageFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'language',
+            'description' => 'Query a single language using its ID',
+            'args' => [
+                [
+                    'name' => 'languageId',
+                    'description' => 'Thoth language ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Language',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$languageCodes: [LanguageCode!] = []
-                \$languageRelations: [LanguageRelation!] = []
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: LanguageField = LANGUAGE_CODE
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                languages(
-                    languageCodes: \$languageCodes
-                    languageRelations: \$languageRelations
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...languageFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$languageCodes: [LanguageCode!] = []
-            \$languageRelations: [LanguageRelation!] = []
-        ) {
-            languageCount(
-                languageCodes: \$languageCodes
-                languageRelations: \$languageRelations
-            )
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment languageFields on Language {
-            languageId
-            workId
-            languageCode
-            languageRelation
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

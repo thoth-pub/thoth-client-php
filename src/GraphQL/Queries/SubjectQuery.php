@@ -2,77 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class SubjectQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class SubjectQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$subjectId: Uuid!) {
-                subject(subjectId: \$subjectId) {
-                    ...subjectFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'subject',
+            'description' => 'Query a single subject using its ID',
+            'args' => [
+                [
+                    'name' => 'subjectId',
+                    'description' => 'Thoth subject ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Subject',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$filter: String = ""
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: SubjectField = SUBJECT_TYPE
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-                \$subjectTypes: [SubjectType!] = []
-            ) {
-                subjects(
-                    filter: \$filter
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                    subjectTypes: \$subjectTypes
-                ) {
-                    ...subjectFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(
-            \$filter: String = ""
-            \$subjectTypes: [SubjectType!] = []
-        ) {
-            subjectCount(
-                filter: \$filter
-                subjectTypes: \$subjectTypes
-            )
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment subjectFields on Subject {
-            subjectId
-            workId
-            subjectType
-            subjectCode
-            subjectOrdinal
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

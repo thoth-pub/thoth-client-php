@@ -2,38 +2,33 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class MeQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class MeQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query {
-                me {
-                    ...meFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'me',
+            'description' => 'Get the total number of contacts',
+            'args' => [],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Me',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    protected function getFieldsFragment(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return <<<GQL
-        fragment meFields on Me {
-            userId
-            email
-            firstName
-            lastName
-            isSuperuser
-            publisherContexts {
-                permissions {
-                    publisherAdmin
-                    workLifecycle
-                    cdnWrite
-                }
-            }
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

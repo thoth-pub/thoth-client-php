@@ -2,70 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class LocationQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class LocationQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$locationId: Uuid!) {
-                location(locationId: \$locationId) {
-                    ...locationFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'location',
+            'description' => 'Query a single location using its ID',
+            'args' => [
+                [
+                    'name' => 'locationId',
+                    'description' => 'Thoth location ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Location',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query (
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: LocationField = LOCATION_PLATFORM
-                \$direction: Direction = ASC
-                \$locationPlatforms: [LocationPlatform!] = []
-                \$publishers: [Uuid!] = []
-            ) {
-                locations(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    locationPlatforms: \$locationPlatforms
-                    publishers: \$publishers
-                ) {
-                    ...locationFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(\$locationPlatforms: [LocationPlatform!] = []) {
-            locationCount(locationPlatforms: \$locationPlatforms)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment locationFields on Location {
-            locationId
-            publicationId
-            landingPage
-            fullTextUrl
-            locationPlatform
-            canonical
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

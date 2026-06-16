@@ -3,6 +3,8 @@
 namespace ThothApi\Tests\GraphQL;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
@@ -52,6 +54,9 @@ final class RequestTest extends TestCase
 
     public function testInvalidQueryWithResponse200(): void
     {
+        $query = 'query { invalid }';
+        $variables = ['limit' => 1];
+
         $this->mockHandler->append(new Response(200, [], json_encode([
             'errors' => [
                 [
@@ -66,8 +71,13 @@ final class RequestTest extends TestCase
             ]
         ])));
 
-        $this->expectException(QueryException::class);
-        $this->request->runQuery('');
+        try {
+            $this->request->runQuery($query, $variables);
+            $this->fail('Expected query exception.');
+        } catch (QueryException $exception) {
+            $this->assertSame($query, $exception->getQuery());
+            $this->assertSame($variables, $exception->getVariables());
+        }
     }
 
     public function testInvalidQueryResponseWith400(): void
@@ -91,6 +101,42 @@ final class RequestTest extends TestCase
         ));
 
         $this->expectException(QueryException::class);
+        $this->request->runQuery('');
+    }
+
+    public function testInvalidQueryResponseWith500(): void
+    {
+        $this->mockHandler->append(new ServerException(
+            '',
+            new GuzzleRequest('post', ''),
+            new Response(500, [], json_encode([
+                'errors' => [
+                    [
+                        'message' => 'server error',
+                    ],
+                ],
+            ]))
+        ));
+
+        try {
+            $this->request->runQuery('');
+            $this->fail('Expected query exception.');
+        } catch (QueryException $exception) {
+            $this->assertSame('server error', $exception->getMessage());
+            $this->assertSame(500, $exception->getStatusCode());
+        }
+    }
+
+    public function testConnectionFailureThrowsQueryException(): void
+    {
+        $this->mockHandler->append(new ConnectException(
+            'Connection refused',
+            new GuzzleRequest('post', '')
+        ));
+
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('Connection refused');
+
         $this->request->runQuery('');
     }
 }

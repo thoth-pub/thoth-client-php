@@ -24,53 +24,83 @@ $client = new \ThothApi\GraphQL\Client();
 
 #### Queries
 
-The client maps all queries from the Thoth GraphQL API. Methods return data in an object-oriented format, making it easy to use and manipulate information.
+Query, mutation, schema, input, enum and scalar classes are generated from the Thoth GraphQL
+introspection schema. The most convenient API is the dynamic client method named after the GraphQL
+operation.
 
 ```php
-$contributors = $client->contributors();
+$works = $client->works(5, [
+    'workId',
+    'fullTitle',
+]);
 
-echo print_r($contributors, true);
-/**
- * Array (
- *    [0] => ThothApi\GraphQL\Models\Contributor Object (
- *            [data] => Array (
- *                    [contributorId] => e1de541c-e84b-4092-941f-dab9b5dac865
- *                    [firstName] => Aaron
- *                    [lastName] => Ansell
- *                    [fullName] => Aaron Ansell
- *                    [orcid] => https://orcid.org/0000-0001-6365-5168
- *                    [website] =>
- *                )
- *        )
- *    [1] => ThothApi\GraphQL\Models\Contributor Object (
- *            [data] => Array (
- *                    [contributorId] => 1c3aade6-6d48-41b4-8def-b435f4b43573
- *                    [firstName] => Aaron D.
- *                    [lastName] => Hornkohl
- *                    [fullName] => Aaron D. Hornkohl
- *                    [orcid] =>
- *                    [website] => https://www.ames.cam.ac.uk/people/dr-aaron-d-hornkohl
- *                )
- *        )
- *    ...
- * )
-*/
-
-$contributor = array_shift($contributors);
-
-echo $contributor->getLastName(); // Ansell
-echo $contributor->getOrcid(); // https://orcid.org/0000-0001-6365-5168
+echo $works[0]->getWorkId();
+echo $works[0]->getFullTitle();
 ```
 
-Queries can accept an array with the required arguments as specified in the Thoth GraphQL schema. It's possible to use the "order" argument specifying only the field and the desired direction.
+Arguments can be passed positionally or by name. Enum values can be passed directly using generated
+enum constants. `OperationRequest::enum()` is still supported for custom operations.
 
 ```php
+use ThothApi\GraphQL\Enums\Direction;
+use ThothApi\GraphQL\Enums\WorkField;
+
 $works = $client->works([
     'publishers' => ['71faf1c3-900a-4b8c-bca7-4f927699fb90'],
     'limit' => 5,
-    'field' => 'PUBLICATION_DATE',
-    'direction' => 'DESC'
+    'order' => [
+        'field' => WorkField::PUBLICATION_DATE,
+        'direction' => Direction::DESC,
+    ],
+], [
+    'workId',
+    'fullTitle',
+    'doi',
 ]);
+```
+
+Selections can include nested fields. Returned object fields and lists are hydrated into generated
+schema classes.
+
+```php
+$work = $client->work('5a5b0fe3-03a9-444b-b221-ecae5370ff30', [
+    'workId',
+    'fullTitle',
+    'titles' => [
+        'titleId',
+        'fullTitle',
+    ],
+    'imprint' => [
+        'imprintId',
+        'publisher' => [
+            'publisherId',
+            'publisherName',
+        ],
+    ],
+]);
+
+echo $work->getImprint()->getPublisher()->getPublisherName();
+echo $work->getTitles()[0]->getFullTitle();
+```
+
+The generic executor is still available when you want to use the generated operation classes
+directly. It returns raw arrays instead of hydrated schema objects.
+
+```php
+use ThothApi\GraphQL\Queries\WorksQuery;
+
+$works = $client->execute(WorksQuery::operation([
+    'limit' => 5,
+], [
+    'workId',
+    'fullTitle',
+]));
+```
+
+Raw GraphQL queries are supported and use the configured token.
+
+```php
+$data = $client->rawQuery('query { workCount }');
 ```
 
 #### Mutations
@@ -81,20 +111,60 @@ To execute mutations, provide a valid personal access token to the client.
 $client->setToken($token);
 ```
 
-Mutations can be executed by providing an instance of the model class corresponding to the mutation type. To delete mutations, only the object's ID is required. When the operation is successful, the object's ID is returned.
+Inputs are generated from the schema. They can be created from arrays, from DTOs that expose
+`getAllData()`, or from `JsonSerializable` objects.
 
 ```php
-use ThothApi\GraphQL\Models\Subject;
+use ThothApi\GraphQL\Enums\SubjectType;
+use ThothApi\GraphQL\Inputs\NewSubject;
 
-$subject = new Subject();
-$subject->setWorkId('5a5b0fe3-03a9-444b-b221-ecae5370ff30');
-$subject->setSubjectType(Subject::SUBJECT_TYPE_BIC);
-$subject->setSubjectCode('1D');
-$subject->setSubjectOrdinal(3);
+$newSubject = new NewSubject([
+    'workId' => '5a5b0fe3-03a9-444b-b221-ecae5370ff30',
+    'subjectType' => SubjectType::BIC,
+    'subjectCode' => '1D',
+    'subjectOrdinal' => 3,
+]);
 
-$subjectId = $client->createSubject($subject); // 1d5ae47b-9e0c-4fba-b2d4-a3a2cdd8860c
+$subjectId = $client->createSubject($newSubject);
+```
 
-$client->deleteSubject($subjectId);
+By default, mutations returning objects select the first `*Id` field and return that scalar value, so
+existing calls stay short.
+
+```php
+$subjectId = $client->createSubject($newSubject);
+```
+
+Pass an explicit selection when you want a hydrated schema object with getters, setters and `toArray()`.
+
+```php
+$subject = $client->createSubject($newSubject, [
+    'subjectId',
+    'subjectCode',
+]);
+
+echo $subject->getSubjectId();
+echo $subject->getSubjectCode();
+print_r($subject->toArray());
+```
+
+Schema objects can also be instantiated and populated manually.
+
+```php
+use ThothApi\GraphQL\Schemas\Work;
+
+$work = (new Work())
+    ->setWorkId('5a5b0fe3-03a9-444b-b221-ecae5370ff30')
+    ->setFullTitle('Example title');
+
+echo $work->getFullTitle();
+print_r($work->toArray());
+```
+
+Regenerate the GraphQL classes from the current Thoth GraphQL schema:
+
+```bash
+composer generate-graphql-client
 ```
 
 #### Exceptions
@@ -103,10 +173,11 @@ A QueryException is thrown in case of an error in the request to the GraphQL API
 
 ```php
 try {
-    $work = new \ThothApi\GraphQL\Models\Work([
-        'doi' => 'https://doi.org/10.00000/00000000',
-    ]);
-    $workId = $client->createWork($work);
+    $client->execute(\ThothApi\GraphQL\Mutations\CreateWorkMutation::operation([
+        'data' => [
+            'doi' => 'https://doi.org/10.00000/00000000',
+        ],
+    ], ['workId']));
 } catch (\ThothApi\Exception\QueryException $exception) {
     echo $exception->getMessage();
     /**
@@ -125,6 +196,8 @@ try {
      *      )
      * )
     */
+    echo $exception->getQuery();
+    echo print_r($exception->getVariables(), true);
 }
 ```
 
@@ -134,44 +207,17 @@ API Documentation: https://export.thoth.pub/
 
 ```php
 $client = new \ThothApi\Rest\Client();
+```
 
-echo(print_r($client->work('doideposit::crossref', 'e0f748b2-984f-45cc-8b9e-13989c31dda4'), true));
-/**
- * <?xml version="1.0" encoding="utf-8"?>
- * <doi_batch version="5.3.1" xmlns="http://www.crossref.org/schema/5.3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.crossref.org/schema/5.3.1 http://www.crossref.org/schemas/crossref5.3.1.xsd" xmlns:ai="http://www.crossref.org/AccessIndicators.xsd" xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1" xmlns:fr="http://www.crossref.org/fundref.xsd">
- *  <head>
- *      <doi_batch_id>e0f748b2-984f-45cc-8b9e-13989c31dda4_20241010195624</doi_batch_id>
- *      <timestamp>20241010195624</timestamp>
- *      <depositor>
- *          <depositor_name>Thoth</depositor_name>
- *          <email_address>distribution@thoth.pub</email_address>
- *      </depositor>
- *      <registrant>Thoth</registrant>
- *  </head>
- *  <body>
- *      <book book_type="monograph">
- *          <book_metadata language="en">
- *          <contributors>
- *              <person_name sequence="first" contributor_role="author">
- *                  <given_name>Ammiel</given_name>
- *                  <surname>Alcalay</surname>
- *                  <affiliations>
- *                      <institution>
- *                          <institution_name>Queens College, CUNY</institution_name>
- *                          <institution_id type="ror">https://ror.org/03v8adn41</institution_id>
- *                      </institution>
- *                      <institution>
- *                          <institution_name>The Graduate Center, CUNY</institution_name>
- *                          <institution_id type="ror">https://ror.org/00awd9g61</institution_id>
- *                      </institution>
- *                  </affiliations>
- *              </person_name>
- *          </contributors>
- *          <titles>
- *              <title>A Bibliography for After Jews and Arabs</title>
- *          </titles>
- *          ...
- */
+The REST client exports metadata in the formats exposed by the Thoth export API.
+
+```php
+$formats = $client->formats();
+
+$metadata = $client->work(
+    'doideposit::crossref',
+    'e0f748b2-984f-45cc-8b9e-13989c31dda4'
+);
 ```
 
 #### Exceptions
@@ -192,14 +238,13 @@ The constructor of both Clients can receive an optional array to add custom [Guz
 $client = new Client([
     'allow_redirects' => false,
     'connect_timeout' => 3.14,
-    'timeout' => 3.14
+    'timeout' => 3.14,
     'proxy' => [
-        'http'  => 'http://localhost:8125', // Use this proxy with "http"
-        'https' => 'http://localhost:9124', // Use this proxy with "https",
-        'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
+        'http' => 'http://localhost:8125',
+        'https' => 'http://localhost:9124',
+        'no' => ['.mit.edu', 'foo.com'],
     ],
-    'debug' => true
-    ...
+    'debug' => true,
 ]);
 ```
 

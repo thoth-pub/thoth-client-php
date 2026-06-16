@@ -2,67 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class AffiliationQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class AffiliationQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$affiliationId: Uuid!) {
-                affiliation(affiliationId: \$affiliationId) {
-                    ...affiliationFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'affiliation',
+            'description' => 'Query a single affiliation using its ID',
+            'args' => [
+                [
+                    'name' => 'affiliationId',
+                    'description' => 'Thoth affiliation ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Affiliation',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: AffiliationField = AFFILIATION_ORDINAL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                affiliations(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    },
-                    publishers: \$publishers
-                ) {
-                    ...affiliationFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            affiliationCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment affiliationFields on Affiliation {
-            affiliationId
-            contributionId
-            institutionId
-            affiliationOrdinal
-            position
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

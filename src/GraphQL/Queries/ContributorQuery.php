@@ -2,68 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class ContributorQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class ContributorQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$contributorId: Uuid!) {
-                contributor(contributorId: \$contributorId) {
-                    ...contributorFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'contributor',
+            'description' => 'Query a single contributor using its ID',
+            'args' => [
+                [
+                    'name' => 'contributorId',
+                    'description' => 'Thoth contributor ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Contributor',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$filter: String = ""
-                \$field: ContributorField = FULL_NAME
-                \$direction: Direction = ASC
-            ) {
-                contributors(
-                    limit: \$limit
-                    offset: \$offset
-                    filter: \$filter
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                ) {
-                    ...contributorFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(\$filter: String = "") {
-            contributorCount(filter: \$filter)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment contributorFields on Contributor {
-            contributorId
-            firstName
-            lastName
-            fullName
-            orcid
-            website
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

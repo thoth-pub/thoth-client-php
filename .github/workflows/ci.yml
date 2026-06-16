@@ -43,3 +43,6 @@ jobs:
 
     - name: Run test suite
       run: vendor/bin/phpunit tests/
+
+    - name: Run static analysis
+      run: composer analyse

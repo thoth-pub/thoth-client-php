@@ -2,65 +2,58 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class BiographyQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class BiographyQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$biographyId: Uuid!
-                \$markupFormat: MarkupFormat
-            ) {
-                biography(biographyId: \$biographyId, markupFormat: \$markupFormat) {
-                    ...biographyFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'biography',
+            'description' => 'Query an biography by it\'s ID',
+            'args' => [
+                [
+                    'name' => 'biographyId',
+                    'description' => null,
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+                [
+                    'name' => 'markupFormat',
+                    'description' => 'If set shows result with this markup format',
+                    'type' => [
+                        'kind' => 'ENUM',
+                        'name' => 'MarkupFormat',
+                        'ofType' => null,
+                    ],
+                    'defaultValue' => '"JATS_XML"',
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Biography',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$filter: String = ""
-                \$field: BiographyField = CONTENT
-                \$direction: Direction = ASC
-                \$localeCodes: [LocaleCode!] = []
-                \$markupFormat: MarkupFormat
-            ) {
-                biographies(
-                    limit: \$limit
-                    offset: \$offset
-                    filter: \$filter
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    localeCodes: \$localeCodes
-                    markupFormat: \$markupFormat
-                ) {
-                    ...biographyFields
-                }
-            }
-            GQL
-        );
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment biographyFields on Biography {
-            biographyId
-            contributionId
-            localeCode
-            content
-            canonical
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

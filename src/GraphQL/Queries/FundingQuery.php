@@ -2,69 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class FundingQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class FundingQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$fundingId: Uuid!) {
-                funding(fundingId: \$fundingId) {
-                    ...fundingFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'funding',
+            'description' => 'Query a single funding using its ID',
+            'args' => [
+                [
+                    'name' => 'fundingId',
+                    'description' => 'Thoth funding ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Funding',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: FundingField = PROGRAM
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                fundings(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                    field: \$field
-                    direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...fundingFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            fundingCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment fundingFields on Funding {
-            fundingId
-            workId
-            institutionId
-            program
-            projectName
-            projectShortname
-            grantNumber
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

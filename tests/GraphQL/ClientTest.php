@@ -4,69 +4,54 @@ namespace ThothApi\Tests\GraphQL;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use ThothApi\GraphQL\Client;
-use ThothApi\Tests\GraphQL\Concerns\HasClientMutationTests;
-use ThothApi\Tests\GraphQL\Concerns\HasClientQueryTests;
-use ThothApi\Tests\GraphQL\Concerns\HasClientSchemaSyncTests;
+use ThothApi\GraphQL\Enums\Direction;
+use ThothApi\GraphQL\Enums\WorkField;
+use ThothApi\GraphQL\Queries\WorksQuery;
 
 final class ClientTest extends TestCase
 {
-    use HasClientMutationTests;
-    use HasClientQueryTests;
-    use HasClientSchemaSyncTests;
-
-    private MockHandler $mockHandler;
-
-    private Client $client;
-
-    protected function setUp(): void
+    public function testExecuteSendsOperationArgumentsAsVariables(): void
     {
-        $this->mockHandler = new MockHandler();
-        $handler = HandlerStack::create($this->mockHandler);
-        $this->client = new Client(['handler' => $handler]);
-    }
+        $mockHandler = new MockHandler();
+        $container = [];
+        $handler = HandlerStack::create($mockHandler);
+        $handler->push(Middleware::history($container));
+        $client = new Client(['handler' => $handler]);
 
-    public function testRunRawQuery(): void
-    {
-        $this->mockHandler->append(new Response(200, [], json_encode([
+        $mockHandler->append(new Response(200, [], json_encode([
             'data' => [
-                'books' => [
-                    'fullTitle' => 'My book title',
-                    'doi' => 'https://doi.org/10.123435/12345678',
-                    'publications' => [],
-                    'contributions' => []
-                ]
-            ]
+                'works' => [],
+            ],
         ])));
 
-        $query = <<<GQL
-        books(order: {field: PUBLICATION_DATE, direction: ASC}) {
-            fullTitle
-            doi
-            publications {
-                    publicationType
-                    isbn
-            }
-            contributions {
-                    contributionType
-                    fullName
-            }
-        }
-        GQL;
+        $client->execute(WorksQuery::operation([
+            'limit' => 1,
+            'order' => [
+                'field' => WorkField::PUBLICATION_DATE,
+                'direction' => Direction::ASC,
+            ],
+        ], ['workId']));
 
-        $args = [];
+        $body = json_decode((string) $container[0]['request']->getBody(), true);
 
-        $result = $this->client->rawQuery($query, $args);
-
+        $this->assertSame(
+            'query ($limit: Int, $order: WorkOrderBy) {' . "\n"
+                . '    works(limit: $limit, order: $order) {' . "\n"
+                . '        workId' . "\n"
+                . '    }' . "\n"
+                . '}',
+            $body['query']
+        );
         $this->assertSame([
-            'books' => [
-                'fullTitle' => 'My book title',
-                'doi' => 'https://doi.org/10.123435/12345678',
-                'publications' => [],
-                'contributions' => []
-            ]
-        ], $result);
+            'limit' => 1,
+            'order' => [
+                'field' => 'PUBLICATION_DATE',
+                'direction' => 'ASC',
+            ],
+        ], $body['variables']);
     }
 }

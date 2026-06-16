@@ -2,73 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class AdditionalResourceQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class AdditionalResourceQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$additionalResourceId: Uuid!) {
-                additionalResource(additionalResourceId: \$additionalResourceId) {
-                    ...additionalResourceFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'additionalResource',
+            'description' => 'Query a single additional resource using its ID',
+            'args' => [
+                [
+                    'name' => 'additionalResourceId',
+                    'description' => 'Thoth additional resource ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'WorkResource',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: AdditionalResourceField = RESOURCE_ORDINAL
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-            ) {
-                additionalResources(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                        field: \$field
-                        direction: \$direction
-                    }
-                    publishers: \$publishers
-                ) {
-                    ...additionalResourceFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query {
-            additionalResourceCount
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment additionalResourceFields on WorkResource {
-            workResourceId
-            workId
-            title
-            description
-            attribution
-            resourceType
-            doi
-            handle
-            url
-            date
-            resourceOrdinal
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }

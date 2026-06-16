@@ -2,79 +2,48 @@
 
 namespace ThothApi\GraphQL\Queries;
 
-class ContributionQuery extends AbstractQuery
+use ThothApi\GraphQL\Definition\FieldDefinition;
+use ThothApi\GraphQL\OperationRequest;
+
+final class ContributionQuery
 {
-    public function getQuery(): string
+    public static function field(): FieldDefinition
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(\$contributionId: Uuid!) {
-                contribution(contributionId: \$contributionId) {
-                    ...contributionFields
-                }
-            }
-            GQL
-        );
+        return \ThothApi\GraphQL\Definition\FieldDefinition::fromIntrospection([
+            'name' => 'contribution',
+            'description' => 'Query a single contribution using its ID',
+            'args' => [
+                [
+                    'name' => 'contributionId',
+                    'description' => 'Thoth contribution ID to search on',
+                    'type' => [
+                        'kind' => 'NON_NULL',
+                        'name' => null,
+                        'ofType' => [
+                            'kind' => 'SCALAR',
+                            'name' => 'Uuid',
+                            'ofType' => null,
+                        ],
+                    ],
+                    'defaultValue' => null,
+                ],
+            ],
+            'type' => [
+                'kind' => 'NON_NULL',
+                'name' => null,
+                'ofType' => [
+                    'kind' => 'OBJECT',
+                    'name' => 'Contribution',
+                    'ofType' => null,
+                ],
+            ],
+            'isDeprecated' => false,
+            'deprecationReason' => null,
+        ]);
     }
 
-    public function getManyQuery(): string
+    public static function operation(array $arguments = [], array $selection = []): OperationRequest
     {
-        return $this->buildQuery(
-            <<<GQL
-            query(
-                \$limit: Int = 100
-                \$offset: Int = 0
-                \$field: ContributionField = CONTRIBUTION_TYPE
-                \$direction: Direction = ASC
-                \$publishers: [Uuid!] = []
-                \$contributionTypes: [ContributionType!] = []
-            ) {
-                contributions(
-                    limit: \$limit
-                    offset: \$offset
-                    order: {
-                    field: \$field
-                    direction: \$direction
-                    }
-                    publishers: \$publishers
-                    contributionTypes: \$contributionTypes
-                ) {
-                    ...contributionFields
-                }
-            }
-            GQL
-        );
-    }
-
-    public function getCountQuery(): string
-    {
-        return <<<GQL
-        query(\$contributionTypes: [ContributionType!] = []) {
-            contributionCount(contributionTypes: \$contributionTypes)
-        }
-        GQL;
-    }
-
-    protected function getFieldsFragment(): string
-    {
-        return <<<GQL
-        fragment contributionFields on Contribution {
-            contributionId
-            contributorId
-            workId
-            contributionType
-            mainContribution
-            firstName
-            lastName
-            fullName
-            contributionOrdinal
-            biographies {
-                biographyId
-                localeCode
-                content
-                canonical
-            }
-        }
-        GQL;
+        return new OperationRequest('query', self::field(), $arguments, $selection);
     }
 }
