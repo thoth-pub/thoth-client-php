@@ -18,6 +18,7 @@ use ThothApi\GraphQL\Inputs\NewPublicationFileUpload;
 use ThothApi\GraphQL\Inputs\NewWork;
 use ThothApi\GraphQL\OperationRequest;
 use ThothApi\GraphQL\Schemas\Imprint;
+use ThothApi\GraphQL\Schemas\Publication;
 use ThothApi\GraphQL\Schemas\Publisher;
 use ThothApi\GraphQL\Schemas\Work;
 
@@ -198,6 +199,37 @@ final class GenericClientTest extends TestCase
         $this->assertInstanceOf(Imprint::class, $work->getImprint());
         $this->assertInstanceOf(Publisher::class, $work->getImprint()->getPublisher());
         $this->assertSame('ACME Press', $work->getImprint()->getPublisher()->getPublisherName());
+    }
+
+    public function testItHydratesSingleAssociativeSelectionWithoutUnwrapping(): void
+    {
+        $mockHandler = new MockHandler([
+            new Response(200, [], json_encode([
+                'data' => [
+                    'work' => [
+                        'publications' => [
+                            [
+                                'publicationId' => 'publication-1',
+                                'publicationType' => 'PAPERBACK',
+                            ],
+                        ],
+                    ],
+                ],
+            ])),
+        ]);
+
+        $client = new Client(['handler' => HandlerStack::create($mockHandler)]);
+
+        $work = $client->work('work-1', [
+            'publications' => [
+                'publicationId',
+                'publicationType',
+            ],
+        ]);
+
+        $this->assertInstanceOf(Work::class, $work);
+        $this->assertContainsOnlyInstancesOf(Publication::class, $work->getPublications());
+        $this->assertSame('publication-1', $work->getPublications()[0]->getPublicationId());
     }
 
     public function testGeneratedSchemaObjectsExposeSettersAndArrayData(): void

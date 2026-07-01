@@ -293,7 +293,12 @@ class Client
 
     private function unwrapSingleSelection($result, array $selection)
     {
-        if (!is_array($result) || count($selection) !== 1 || !is_string($selection[0])) {
+        if (
+            !is_array($result)
+            || count($selection) !== 1
+            || !array_key_exists(0, $selection)
+            || !is_string($selection[0])
+        ) {
             return $result;
         }
 
